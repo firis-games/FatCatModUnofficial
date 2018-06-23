@@ -79,7 +79,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
      */
     public boolean continueExecuting()
     {
-        if (!(cat.getDistanceSqToCenter(new BlockPos(closestPlatePos).offsetUp()) < 1.0D) && this.giveuptime > 0 && checkBlock(findType, closestPlatePos)) {
+        if (!(cat.getDistanceSqToCenter(new BlockPos(closestPlatePos).up()) < 1.0D) && this.giveuptime > 0 && checkBlock(findType, closestPlatePos)) {
         	return true;
         }
         else {

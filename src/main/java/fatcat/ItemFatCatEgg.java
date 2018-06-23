@@ -38,8 +38,8 @@ public class ItemFatCatEgg extends Item {
 
             EntityFatCat entity = new EntityFatCat(worldIn);
             entity.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
-            // set OwnerID
-            entity.func_152115_b(playerIn.getUniqueID().toString());
+            // setOwnerId
+            entity.setOwnerId(playerIn.getUniqueID().toString());
             worldIn.spawnEntityInWorld(entity);
 
             if (entity != null)

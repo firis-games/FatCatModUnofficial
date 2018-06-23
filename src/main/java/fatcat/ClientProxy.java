@@ -29,7 +29,7 @@ public class ClientProxy extends CommonProxy {
 //		System.out.println("ClientProxy(spawnParticle): type="+type);
 		for (int i = 0; i < number; i++) {
 			// spawnParticle
-			Minecraft.getMinecraft().renderGlobal.func_180442_a(type.func_179348_c(), type.func_179344_e(),posX, posY, posZ, verX, verY, verZ, options);
+			Minecraft.getMinecraft().renderGlobal.spawnParticle(type.getParticleID(), type.getShouldIgnoreRange(),posX, posY, posZ, verX, verY, verZ, options);
         }
 	}
 	

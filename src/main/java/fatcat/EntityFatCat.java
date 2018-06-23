@@ -164,8 +164,8 @@ public class EntityFatCat extends EntityTameable {
 	@Override
 	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
 		EntityFatCat cat = new EntityFatCat(this.worldObj);
-		// setOwnerID
-		cat.func_152115_b(this.getOwner().getUniqueID().toString());
+		// setOwnerId
+		cat.setOwnerId(this.getOwner().getUniqueID().toString());
 		return cat;
 	}
 	
@@ -856,7 +856,7 @@ public class EntityFatCat extends EntityTameable {
     }
     
     private void setAvoidWaters(boolean avoid) {
-    	((PathNavigateGround)this.getNavigator()).func_179690_a(avoid);
+    	((PathNavigateGround)this.getNavigator()).setAvoidsWater(avoid);
     }
     
     @Override
@@ -877,9 +877,9 @@ public class EntityFatCat extends EntityTameable {
      * パラメータ変更時に呼び出される。サイズを変更する。
      * @see net.minecraft.entity.Entity#func_145781_i(int)
      */
-    public void func_145781_i(int id)
+    public void onDataWatcherUpdate(int id)
     {
-        super.func_145781_i(id);
+        super.onDataWatcherUpdate(id);
 
         if (id == WEIGHT_DATA_INDEX)
         {

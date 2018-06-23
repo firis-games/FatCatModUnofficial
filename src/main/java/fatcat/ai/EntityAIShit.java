@@ -92,7 +92,7 @@ public class EntityAIShit extends EntityAIBase {
         	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5D, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5D, 0.3f);
         }
 //        System.out.println("EntityAIShit distance: " + this.closestPos.toString() + ", distance=" + cat.getDistance(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord));
-        if (cat.getDistanceSqToCenter(new BlockPos(closestPos).offsetUp()) < 1.0D) {
+        if (cat.getDistanceSqToCenter(new BlockPos(closestPos).up()) < 1.0D) {
         	unkoCountDown = 60;
 			giveuptime = 0;
 //        	System.out.println("EntityAIShit: set Unko Countdown");

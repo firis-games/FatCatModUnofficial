@@ -43,7 +43,7 @@ public class ItemFatCatUnko extends Item {
         {
             IGrowable igrowable = (IGrowable)block;
 
-            if (igrowable.isStillGrowing(worldIn, pos, iblockstate, worldIn.isRemote))
+            if (igrowable.canGrow(worldIn, pos, iblockstate, worldIn.isRemote))
             {
                 if (!worldIn.isRemote)
                 {
