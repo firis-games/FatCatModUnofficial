@@ -102,7 +102,6 @@ public class EntityAIShit extends EntityAIBase {
 	
 
 	private void findBlock() {
-		Block block;
 		double closestPosDistance = 100.0D;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {

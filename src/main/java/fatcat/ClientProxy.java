@@ -1,16 +1,11 @@
 package fatcat;
 
+import fatcat.model.RenderFatCat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import fatcat.gui.GuiStatusHandler;
-import fatcat.model.RenderFatCat;
 
 public class ClientProxy extends CommonProxy {
 	@Override
@@ -33,6 +28,7 @@ public class ClientProxy extends CommonProxy {
         }
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void registerEntityRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFatCat.class, new RenderFatCat(Minecraft.getMinecraft().getRenderManager()));
 	}

@@ -3,34 +3,30 @@ package fatcat.ai;
 import java.util.List;
 
 import fatcat.EntityFatCat;
-import fatcat.EntityItemUnko;
 import fatcat.FatCatMod;
 import fatcat.ItemFatCatUnko;
 import fatcat.ItemFurball;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemNameTag;
-import net.minecraft.item.ItemReed;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 
 // Find near food entity and eat it.
 public class EntityAIEatEntityItem extends EntityAIBase {
 	private EntityFatCat cat;
-	private float speed;
+	//private float speed;
 	private int giveuplimit;
 	private float frequency;
 	private EntityItem closestItem;
 	private int giveuptime;
-	private static final float NONFOOD_EAT_FREQ = 0.01F;
 	
 	public EntityAIEatEntityItem(EntityFatCat cat, float frequency, float speed, int giveuplimit) {
 		this.cat = cat;
-		this.speed = speed;
+		//this.speed = speed;
 		this.giveuplimit = giveuplimit;
 		this.frequency = frequency;
 	}
@@ -45,8 +41,6 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 		}
 		else {
 			this.closestItem = (EntityItem)this.cat.worldObj.findNearestEntityWithinAABB(EntityItem.class, this.cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D), this.cat);
-			boolean exec = (this.closestItem != null && isFindableItem(this.closestItem.getEntityItem().getItem()));
-//			System.out.println("EntityAIEatEntityItem: exec="+exec+",item="+closestItem);
 
 			boolean res = false;
 			if (this.closestItem != null)  {
@@ -104,7 +98,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     {
         this.cat.getLookHelper().setLookPosition(this.closestItem.posX, this.closestItem.posY + (double)this.closestItem.getEyeHeight(), this.closestItem.posZ, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	boolean tried = this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, speed);
+//        	boolean tried = this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, speed);
         }
         if (isCollideEntityItem(this.cat, this.closestItem)) {
         	this.eatEntityItem(this.closestItem);
@@ -137,7 +131,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     
     private boolean isCollideEntityItem(EntityFatCat cat, Entity item) {
     	AxisAlignedBB axisalignedbb = cat.getEntityBoundingBox().expand(1.0D, 1.0D, 1.0D);
-    	List list = cat.worldObj.getEntitiesWithinAABBExcludingEntity(cat, axisalignedbb);
+    	List<Entity> list = cat.worldObj.getEntitiesWithinAABBExcludingEntity(cat, axisalignedbb);
     	return list.contains(item);
     }
 }

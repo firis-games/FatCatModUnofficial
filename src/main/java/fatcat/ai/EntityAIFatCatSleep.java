@@ -2,21 +2,17 @@ package fatcat.ai;
 
 import fatcat.EntityFatCat;
 import fatcat.EntityFatCat.StatusChangeReason;
-import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 /* Try to sleep */
 public class EntityAIFatCatSleep extends EntityAIBase {
 	private EntityFatCat cat;
-	private World world;
+	//private World world;
 	public boolean tryWakeup = false;
 	
 	public EntityAIFatCatSleep(EntityFatCat cat) {
 		this.cat = cat;
-		this.world = cat.worldObj;
+		//this.world = cat.worldObj;
 		this.setMutexBits(16);
 	}
 

@@ -2,9 +2,7 @@ package fatcat.ai;
 
 import fatcat.EntityFatCat;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 

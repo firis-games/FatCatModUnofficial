@@ -1,7 +1,5 @@
 package fatcat.model;
 
-import java.math.BigDecimal;
-
 import org.lwjgl.opengl.GL11;
 
 import fatcat.EntityFatCat;
@@ -305,7 +303,7 @@ public class ModelFatCat extends ModelBase {
         this.eye1.rotateAngleZ = this.eye2.rotateAngleZ = this.mouth.rotateAngleZ = this.ripRight.rotateAngleZ = this.ripLeft.rotateAngleZ = this.head.rotateAngleZ;
     }
     
-    private float to_angle(float f) {
-    	return f * (180F / (float)Math.PI);
-    }
+    //private float to_angle(float f) {
+    //	return f * (180F / (float)Math.PI);
+    //}
 }

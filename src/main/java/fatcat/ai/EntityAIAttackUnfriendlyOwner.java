@@ -3,7 +3,6 @@ package fatcat.ai;
 import fatcat.EntityFatCat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 
 /* Attack to unfriendly owner sometimes */

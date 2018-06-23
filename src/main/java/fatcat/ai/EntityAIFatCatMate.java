@@ -13,7 +13,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
     private World worldObj;
     private int matingTimeout;
     private int tick;
-    private static final int CAT_MIN_WEIGHT = 4000;
+    //private static final int CAT_MIN_WEIGHT = 4000;
     
     public EntityAIFatCatMate(EntityFatCat cat) {
     	this.cat = cat;

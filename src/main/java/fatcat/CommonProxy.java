@@ -1,18 +1,10 @@
 package fatcat;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import fatcat.gui.GuiStatusHandler;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 
 public class CommonProxy {
-
-	/** Used to store IExtendedEntityProperties data temporarily between player death and respawn or dimension change */
-	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
 
 	public void registerRenderers() {}
 	

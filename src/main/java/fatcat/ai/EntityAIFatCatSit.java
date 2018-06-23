@@ -3,13 +3,8 @@ package fatcat.ai;
 import fatcat.EntityFatCat;
 import fatcat.FatCatMod;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockPressurePlate;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -53,7 +48,6 @@ public class EntityAIFatCatSit extends EntityAIBase {
 	}
 
 	private void findSitSpot() {
-		Block block;
 		double closestPosDistance = 100.0D;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {

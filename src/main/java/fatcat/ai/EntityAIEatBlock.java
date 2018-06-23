@@ -6,7 +6,6 @@ package fatcat.ai;
 import fatcat.EntityFatCat;
 import fatcat.FatCatMod;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -19,7 +18,6 @@ public class EntityAIEatBlock extends EntityAIBase {
 	private World world;
 	private float frequency;
 	private Vec3 closestPos;
-	private Block targetBlock;
 	private int giveuptime;
 
 	public EntityAIEatBlock(EntityFatCat cat) {
@@ -49,7 +47,7 @@ public class EntityAIEatBlock extends EntityAIBase {
 	}
 
 	private void findBlock() {
-		Block block;
+
 		double closestPosDistance = 100.0D;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {

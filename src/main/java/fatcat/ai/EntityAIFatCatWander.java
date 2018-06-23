@@ -1,7 +1,6 @@
 package fatcat.ai;
 
 import fatcat.EntityFatCat;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIWander;
 
 public class EntityAIFatCatWander extends EntityAIWander {

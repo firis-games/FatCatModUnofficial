@@ -1,33 +1,22 @@
 package fatcat;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 
-import scala.actors.threadpool.Arrays;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import fatcat.ai.EntityAIAttackUnfriendlyOwner;
 import fatcat.ai.EntityAIEatBlock;
 import fatcat.ai.EntityAIEatEntityItem;
 import fatcat.ai.EntityAIFatCatBeg;
+import fatcat.ai.EntityAIFatCatMate;
 import fatcat.ai.EntityAIFatCatSit;
 import fatcat.ai.EntityAIFatCatSleep;
 import fatcat.ai.EntityAIFatCatWander;
-import fatcat.ai.EntityAIFatCatMate;
 import fatcat.ai.EntityAIShit;
 import fatcat.ai.EntityAIWanderToy;
-import fatcat.model.ModelFatCat;
-import fatcat.model.RenderFatCat;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIFollowOwner;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -37,12 +26,13 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityFatCat extends EntityTameable {
 	private static final int WEIGHT_DATA_INDEX = 20;
