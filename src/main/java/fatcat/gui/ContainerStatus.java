@@ -5,12 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 
 public class ContainerStatus extends Container {
-	private EntityFatCat cat;
-	private EntityPlayer player;
+	//private EntityFatCat cat;
+	//private EntityPlayer player;
 
 	public ContainerStatus(EntityPlayer player, EntityFatCat cat) {
-		this.player = player;
-		this.cat = cat;
+		//this.player = player;
+		//this.cat = cat;
 	}
 
 	/**

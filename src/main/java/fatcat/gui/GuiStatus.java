@@ -3,25 +3,22 @@ package fatcat.gui;
 import org.lwjgl.opengl.GL11;
 
 import fatcat.EntityFatCat;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiStatus extends GuiContainer {
 
     private static final ResourceLocation textures = new ResourceLocation("fatcat:textures/gui/gui_fatcat_status.png");
     private EntityFatCat cat;
-    private EntityPlayer player;
+    //private EntityPlayer player;
 
 	public GuiStatus(EntityPlayer player, EntityFatCat cat) {
 		super(new ContainerStatus(player, cat));
 		this.cat = cat;
-		this.player = player;
+		//this.player = player;
 		this.xSize = 200;
 		this.ySize = 127;
         this.allowUserInput = false;

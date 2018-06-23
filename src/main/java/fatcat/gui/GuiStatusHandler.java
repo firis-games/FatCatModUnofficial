@@ -2,12 +2,11 @@ package fatcat.gui;
 
 import java.util.List;
 
-import net.minecraft.client.gui.Gui;
+import fatcat.EntityFatCat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import fatcat.EntityFatCat;
 
 public class GuiStatusHandler implements IGuiHandler {
 	@Override
