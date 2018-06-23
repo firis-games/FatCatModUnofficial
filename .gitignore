@@ -1,3 +1,4 @@
+
 # eclipse
 bin
 *.launch
@@ -20,3 +21,6 @@ build
 # other
 eclipse
 run
+
+# minecraft forge
+/*.txt
