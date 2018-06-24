@@ -4,35 +4,36 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemFatCatEgg extends Item {
 	public ItemFatCatEgg() {
 		super();
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(CreativeTabs.MISC);
 	}
 
 	@Override
-    /**
-     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
-     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
+	/**
+     * Called when a Block is right-clicked with this Item
      */
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (worldIn.isRemote)
         {
-            return true;
+            return EnumActionResult.SUCCESS;
         }
         else
         {
-            pos = pos.offset(side);
+            pos = pos.offset(facing);
 
             EntityFatCat entity = new EntityFatCat(worldIn);
             entity.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
             // setOwnerId
-            entity.setOwnerId(playerIn.getUniqueID().toString());
+            entity.setOwnerId(playerIn.getUniqueID());
             worldIn.spawnEntityInWorld(entity);
 
             if (entity != null)
@@ -43,7 +44,7 @@ public class ItemFatCatEgg extends Item {
                 }
             }
 
-            return true;
+            return EnumActionResult.SUCCESS;
         }
     }
 }

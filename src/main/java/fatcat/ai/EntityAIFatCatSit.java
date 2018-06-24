@@ -5,16 +5,16 @@ import fatcat.FatCatMod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAIFatCatSit extends EntityAIBase {
 	private EntityFatCat cat;
 	private World world;
 	private float frequency;
-	private Vec3 closestPlatePos = null;
+	private Vec3d closestPlatePos = null;
 	private int giveuptime;
 	private enum FindType {Plate, Bed, Furnance}
 	private FindType findType = FindType.Plate;
@@ -52,7 +52,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
+					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
 					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
 					if (checkBlock(findType, pos) && (d > 1.0D) && (d < closestPosDistance)) {
 						FatCatMod.proxy.log(cat.worldObj, "EntityAIFatCatSit: found=<%s>", pos);
@@ -112,7 +112,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
         --this.giveuptime;
     }
     
-    private boolean checkBlock(FindType type, Vec3 pos) throws RuntimeException {
+    private boolean checkBlock(FindType type, Vec3d pos) throws RuntimeException {
     	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
@@ -123,17 +123,17 @@ public class EntityAIFatCatSit extends EntityAIBase {
     	}
     	
     	if (type == FindType.Plate) {
-    		if (block == Blocks.wooden_pressure_plate) {
+    		if (block == Blocks.WOODEN_PRESSURE_PLATE) {
     			return true;
     		}
     	}
     	else if (type == FindType.Bed) {
-    		if (block == Blocks.bed && block.isBedFoot(cat.worldObj, blockPos)) {
+    		if (block == Blocks.BED && block.isBedFoot(cat.worldObj, blockPos)) {
     			return true;
     		}
     	}
     	else if (type == FindType.Furnance) {
-    		if (block == Blocks.lit_furnace) {
+    		if (block == Blocks.LIT_FURNACE) {
     			return true;
     		}
     	}

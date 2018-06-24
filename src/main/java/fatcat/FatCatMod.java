@@ -16,25 +16,24 @@ import java.util.regex.Pattern;
 
 import fatcat.gui.GuiStatusHandler;
 import net.minecraft.client.resources.DefaultResourcePack;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.util.WeightedRandomFishable;
-import net.minecraftforge.common.ChestGenHooks;
-import net.minecraftforge.common.FishingHooks;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 @Mod(modid = FatCatMod.MODID, version = FatCatMod.VERSION)
 public class FatCatMod {
@@ -84,6 +83,8 @@ public class FatCatMod {
     	EntityRegistry.registerModEntity(EntityFatCat.class, "FatCat", ++modEntityIndex, this, 64, 10, true);
     	EntityRegistry.registerModEntity(EntityItemUnko.class, "FatCatUnko", ++modEntityIndex, this, 64, 10, true);
 
+    	//レシピ追加
+    	/*
     	GameRegistry.addRecipe(
     			new ItemStack(brush, 1),
     			"BT ", "BT ", " T ",
@@ -92,26 +93,35 @@ public class FatCatMod {
     			new ItemStack(feather_toy, 1),
     			" F ", " F ", " T ",
     			'F', furball, 'T', Items.stick);
+    	*/
     	
+    	//チェストへアイテムを追加
+    	/*
     	// Get a fatcat egg via fishing.
     	FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(egg), 1));
     	ChestGenHooks.addItem(ChestGenHooks.PYRAMID_DESERT_CHEST, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 15));
     	ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 15));
     	ChestGenHooks.addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 7));
+    	*/
     	
     	Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 
     	config.load();
     	Property breeding_mode_property = config.get(Configuration.CATEGORY_GENERAL, "BreedingMode", true);
-    	breeding_mode_property.comment = "Breeding MODE(true/false): FatCat status is fixed if you disable this option";
+    	breeding_mode_property.setComment("Breeding MODE(true/false): FatCat status is fixed if you disable this option");
     	breeding_mode = breeding_mode_property.getBoolean(true);
     	Property logging_mode_property = config.get(Configuration.CATEGORY_GENERAL, "Logging", false);
-    	logging_mode_property.comment = "logging for debug";
+    	logging_mode_property.setComment("logging for debug");
     	logging = logging_mode_property.getBoolean(false);
      	Property debug_property = config.get(Configuration.CATEGORY_GENERAL, "Debug", false);
-    	debug_property.comment = "debugging mode for development";
+    	debug_property.setComment("debugging mode for development");
     	DEBUG = debug_property.getBoolean(false);
     	config.save();
+    	
+    	
+    	
+    	MinecraftForge.EVENT_BUS.register(this);
+    	
 	}
     
     @EventHandler
@@ -194,4 +204,5 @@ public class FatCatMod {
 		java.util.Collections.sort(types);
 		return types;
 	}
+
 }

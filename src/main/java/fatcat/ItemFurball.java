@@ -7,6 +7,6 @@ public class ItemFurball extends Item {
 
 	public ItemFurball() {
 		super();
-        this.setCreativeTab(CreativeTabs.tabMaterials);
+        this.setCreativeTab(CreativeTabs.MATERIALS);
 	}
 }

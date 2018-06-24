@@ -9,11 +9,15 @@ import fatcat.ItemFurball;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemNameTag;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 // Find near food entity and eat it.
 public class EntityAIEatEntityItem extends EntityAIBase {
@@ -59,6 +63,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
+	@Override
     public boolean continueExecuting()
     {
         if (this.closestItem.isEntityAlive() && this.giveuptime > 0) {
@@ -74,6 +79,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     /**
      * Execute a one shot task or start executing a continuous task
      */
+	@Override
     public void startExecuting()
     {
         this.giveuptime = this.giveuplimit;
@@ -86,6 +92,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     /**
      * Resets the task
      */
+	@Override
     public void resetTask()
     {
         this.closestItem = null;
@@ -94,6 +101,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     /**
      * Updates the task
      */
+	@Override
     public void updateTask()
     {
         this.cat.getLookHelper().setLookPosition(this.closestItem.posX, this.closestItem.posY + (double)this.closestItem.getEyeHeight(), this.closestItem.posZ, 10.0F, (float)this.cat.getVerticalFaceSpeed());
@@ -111,11 +119,16 @@ public class EntityAIEatEntityItem extends EntityAIBase {
      * @param food
      */
     private void eatEntityItem(EntityItem food) {
+    	
     	FatCatMod.proxy.spawnParticle(
     			EnumParticleTypes.ITEM_CRACK, food.posX, food.posY+0.5, food.posZ,
     			this.cat.getRNG().nextGaussian() * 0.15D, this.cat.getRNG().nextDouble() * 0.2D, this.cat.getRNG().nextGaussian() * 0.15D, 10,
     			new int[] {Item.getIdFromItem(food.getEntityItem().getItem())});
-    	cat.worldObj.playSoundEffect(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D, "random.eat", 1.0F, 1.0F);
+    	
+    	cat.worldObj.playSound((EntityPlayer)null, new BlockPos(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D), 
+    			SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    	    	
+    	
     	// もしPlayerが取っても加算されないようにする
     	if (food.getEntityItem() != null) {
     		food.getEntityItem().stackSize = 0;

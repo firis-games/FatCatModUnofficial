@@ -8,16 +8,16 @@ import fatcat.FatCatMod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAIEatBlock extends EntityAIBase {
 	private EntityFatCat cat;
 	private World world;
 	private float frequency;
-	private Vec3 closestPos;
+	private Vec3d closestPos;
 	private int giveuptime;
 
 	public EntityAIEatBlock(EntityFatCat cat) {
@@ -52,7 +52,7 @@ public class EntityAIEatBlock extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
+					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
 					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
 					if (checkBlock(pos) && (d > 1.0D) && (d < closestPosDistance)) {
 						FatCatMod.proxy.log(this.world, "EntityAIEatBlock: found %s", pos.toString());
@@ -117,7 +117,7 @@ public class EntityAIEatBlock extends EntityAIBase {
         --this.giveuptime;
     }
     
-    private boolean checkBlock(Vec3 pos) throws RuntimeException {
+    private boolean checkBlock(Vec3d pos) throws RuntimeException {
     	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
@@ -127,9 +127,9 @@ public class EntityAIEatBlock extends EntityAIBase {
     		return false;
     	}
     	
-    	if (block == Blocks.potatoes || block == Blocks.tallgrass || block == Blocks.brown_mushroom_block ||
-    		block == Blocks.red_mushroom_block || block == Blocks.carrots || block == Blocks.wheat ||
-    		block == Blocks.reeds || block == Blocks.melon_block) {
+    	if (block == Blocks.POTATOES || block == Blocks.TALLGRASS || block == Blocks.BROWN_MUSHROOM_BLOCK ||
+    		block == Blocks.RED_MUSHROOM_BLOCK || block == Blocks.CARROTS || block == Blocks.WHEAT ||
+    		block == Blocks.REEDS || block == Blocks.MELON_BLOCK) {
     		return true;
     	}
     	

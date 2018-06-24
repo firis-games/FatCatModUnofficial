@@ -2,8 +2,8 @@ package fatcat;
 
 import fatcat.model.RenderFatCat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 

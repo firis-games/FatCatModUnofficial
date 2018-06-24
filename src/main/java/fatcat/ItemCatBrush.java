@@ -4,6 +4,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class ItemCatBrush extends Item {
@@ -12,15 +15,16 @@ public class ItemCatBrush extends Item {
 		super();
         this.setMaxDamage(64);
         this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.tabTools);
+        this.setCreativeTab(CreativeTabs.TOOLS);
 	}
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+	/**
+     * Called when the equipped item is right clicked.
      */
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	@Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player, EnumHand hand)
     {
-    	player.swingItem();
-        return stack;
+		player.swingArm(hand);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
     }
 }

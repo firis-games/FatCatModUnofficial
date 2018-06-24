@@ -5,16 +5,16 @@ import fatcat.FatCatMod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAIShit extends EntityAIBase {
 	private EntityFatCat cat;
 	private World world;
 	public boolean tryExec = false;
-	private Vec3 closestPos = null;
+	private Vec3d closestPos = null;
 	private int giveuptime = 0;
 	private int unkoCountDown = 0;
 
@@ -106,8 +106,8 @@ public class EntityAIShit extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3 pos = new Vec3(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					Vec3 catPos = new Vec3(cat.posX,cat.posY, cat.posZ);
+					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
+					Vec3d catPos = new Vec3d(cat.posX,cat.posY, cat.posZ);
 					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
 					if (checkBlock(pos) && (d < closestPosDistance)) {
 						FatCatMod.proxy.log(cat.worldObj, "EntityAIShit: found=<%s>, cat=<%s>", pos, catPos);
@@ -122,7 +122,7 @@ public class EntityAIShit extends EntityAIBase {
 		}
 	}
 
-    private boolean checkBlock(Vec3 pos) throws RuntimeException {
+    private boolean checkBlock(Vec3d pos) throws RuntimeException {
     	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
@@ -132,7 +132,7 @@ public class EntityAIShit extends EntityAIBase {
     		return false;
     	}
     	
-    	if (block == Blocks.sand) {
+    	if (block == Blocks.SAND) {
     		return true;
     	}
     	

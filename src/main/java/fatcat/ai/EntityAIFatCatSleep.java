@@ -26,6 +26,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
+	@Override
     public boolean continueExecuting()
     {
 //		System.out.println("EntityAIFatCatSleep: continueExecuting="+(this.cat.getTiredness() > 0));
@@ -35,6 +36,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
     /**
      * Execute a one shot task or start executing a continuous task
      */
+	@Override
     public void startExecuting()
     {
         this.cat.setAISit(true);
@@ -44,6 +46,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
     /**
      * Resets the task
      */
+	@Override
     public void resetTask()
     {
         this.cat.setAISit(false);
@@ -54,6 +57,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
     /**
      * Updates the task
      */
+	@Override
     public void updateTask()
     {
     	this.cat.setTiredness(cat.getTiredness()-1, StatusChangeReason.Sleep);

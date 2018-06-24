@@ -99,7 +99,8 @@ public class EntityAIWanderToy extends EntityAIBase {
 		itemstack.damageItem(ItemFeatherToy.MAX_DAMAGE / 3 + 1, cat);
 		if (itemstack.stackSize <= 0)
 		{
-			player.destroyCurrentEquippedItem();
+			//手持ちアイテムを消去
+			player.inventory.mainInventory[player.inventory.currentItem] = null;
 		}
 	}
 }

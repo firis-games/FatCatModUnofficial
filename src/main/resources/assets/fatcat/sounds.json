@@ -1,41 +1,27 @@
 {
   "purreow": {
     "category": "neutral",
-    "sounds": [
-      "purreow1",
-      "purreow2"
-    ]
+    "subtitle": "fatcat.subtitle.purreow",
+    "sounds": [ "fatcat:purreow1", "fatcat:purreow2"]
   },
   "hitt": {
     "category": "neutral",
-    "sounds": [
-      "hitt1",
-      "hitt2",
-      "hitt3"
-    ]
+    "subtitle": "fatcat.subtitle.hitt",
+    "sounds": [ "fatcat:hitt1", "fatcat:hitt2", "fatcat:hitt3"]
   },
   "meow": {
     "category": "neutral",
-    "sounds": [
-      "meow1",
-      "meow2",
-      "meow3",
-      "meow4"
-    ]
+    "subtitle": "fatcat.subtitle.meow",
+    "sounds": [ "fatcat:meow1", "fatcat:meow2", "fatcat:meow3", "fatcat:meow4"]
   },
   "unko": {
     "category": "neutral",
-    "sounds": [
-      "unko1",
-      "unko2",
-      "unko3"
-    ]
+    "subtitle": "fatcat.subtitle.unko",
+    "sounds": [ "fatcat:unko1", "fatcat:unko2", "fatcat:unko3"]
   },
   "sleep": {
     "category": "neutral",
-    "sounds": [
-      "sleep1",
-      "sleep2"
-    ]
+    "subtitle": "fatcat.subtitle.sleep",
+    "sounds": [ "fatcat:sleep1", "fatcat:sleep2", "fatcat:sleep3"]
   }
 }

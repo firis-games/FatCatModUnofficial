@@ -7,30 +7,36 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemFatCatUnko extends Item {
 
 	public ItemFatCatUnko() {
 		super();
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(CreativeTabs.MISC);
 	}
 
+	/**
+     * Called when a Block is right-clicked with this Item
+     */
 	@Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (applyUnko(stack, worldIn, pos, playerIn))
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    {
+		if (applyUnko(stack, worldIn, pos, playerIn))
         {
             if (!worldIn.isRemote)
             {
-                worldIn.playAuxSFX(2005, pos, 0);
+                worldIn.playEvent(2005, pos, 0);
             }
 
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
-	}
+        return EnumActionResult.PASS;
+    }
 
 	private boolean applyUnko(ItemStack stack, World worldIn, BlockPos pos, EntityPlayer player) {
         IBlockState iblockstate = worldIn.getBlockState(pos);

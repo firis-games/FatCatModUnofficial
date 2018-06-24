@@ -2,6 +2,8 @@ package fatcat;
 
 import java.math.BigDecimal;
 
+import javax.annotation.Nullable;
+
 import fatcat.ai.EntityAIAttackUnfriendlyOwner;
 import fatcat.ai.EntityAIEatBlock;
 import fatcat.ai.EntityAIEatEntityItem;
@@ -17,33 +19,43 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISit;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityFatCat extends EntityTameable {
-	private static final int WEIGHT_DATA_INDEX = 20;
-	private static final int HUNGER_DATA_INDEX = WEIGHT_DATA_INDEX+1;
-	private static final int BLADDER_DATA_INDEX = WEIGHT_DATA_INDEX+2;
-	private static final int POSE_DATA_INDEX = WEIGHT_DATA_INDEX+3;
-	private static final int FACE_DATA_INDEX = WEIGHT_DATA_INDEX+4;
-	private static final int TIREDNESS_DATA_INDEX = WEIGHT_DATA_INDEX+5;
-	private static final int FRIENDSHIP_DATA_INDEX = WEIGHT_DATA_INDEX+6;
-	private static final int SKIN_DATA_INDEX = WEIGHT_DATA_INDEX+7;
-	private static final int LOVENESS_DATA_INDEX = WEIGHT_DATA_INDEX+8;
+	
+	//DataManager用の定義
+	private static final DataParameter<Integer> WEIGHT_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> HUNGER_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> BLADDER_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> POSE_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> FACE_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> TIREDNESS_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> FRIENDSHIP_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> SKIN_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> LOVENESS_DATA_INDEX = EntityDataManager.<Integer>createKey(EntityFatCat.class, DataSerializers.VARINT);
+	
 	public static final int TIREDNESS_MAX = 2000;
 	public static final int FRIENDSHIP_MAX = 2000;
 	public static final int LOVENESS_MAX = 2000;
@@ -52,6 +64,7 @@ public class EntityFatCat extends EntityTameable {
 	public static final int WEIGHT_STATUS_ADULT = 4000;
 	public static final int WEIGHT_STATUS_MAX = 10000;
 	public static final int HOUR_TICK = 1000;
+	
 	private int blinkTick = 0;
 	private int myauTick = 0;
 	private int brushingTick = 0;
@@ -63,8 +76,8 @@ public class EntityFatCat extends EntityTameable {
     public boolean isMating = false;
     public boolean tryMating = false;
 	
-	private EntityAIShit aiUnko = new EntityAIShit(this);
-	private EntityAIFatCatSleep aiSleep = new EntityAIFatCatSleep(this);
+	private EntityAIShit aiUnko;
+	private EntityAIFatCatSleep aiSleep;
 	
     public enum Face {
     	None,
@@ -100,21 +113,44 @@ public class EntityFatCat extends EntityTameable {
     }
 
 	public EntityFatCat(World world) {
+		
 		super(world);
+    	
 		this.setSize(0.9F, 1.0F);
 		this.setCatScale();
-		this.setAvoidWaters(true);
+		//this.setAvoidWaters(true);
         this.setTamed(true);
-        int priority = 0;
-        this.aiSit.setSitting(true);
+        
+        // 育成モードオフ（デフォルト値に設定）
+        if (!FatCatMod.breeding_mode) {
+        	this.dataManager.set(WEIGHT_DATA_INDEX, 4000);
+        	this.dataManager.set(HUNGER_DATA_INDEX, HUNGER_MAX);
+        	this.dataManager.set(BLADDER_DATA_INDEX, 0);
+        	this.dataManager.set(TIREDNESS_DATA_INDEX, 0);
+        	this.dataManager.set(FRIENDSHIP_DATA_INDEX, FRIENDSHIP_MAX);
+        	this.dataManager.set(LOVENESS_DATA_INDEX, 0);
+        }
+        FatCatMod.proxy.log(world, "EntityFatCat initialized(%s)", this.toString());
+	}
+	
+	@Override
+	protected void initEntityAI()
+    {
+		
+		this.aiUnko = new EntityAIShit(this);
+		this.aiSleep = new EntityAIFatCatSleep(this);
+		this.aiSit = new EntityAISit(this);
+		//this.aiSit.setSitting(true);
+		
+		int priority = 0;
         this.tasks.addTask(++priority, new EntityAISwimming(this));
-        this.tasks.addTask(++priority, aiSleep);
+        this.tasks.addTask(++priority, this.aiSit);
         this.tasks.addTask(++priority, new EntityAIAttackUnfriendlyOwner(this));
         this.tasks.addTask(++priority, new EntityAIEatEntityItem(this,0.25f,0.6f,100));
         this.tasks.addTask(++priority, new EntityAIFatCatSit(this));
         this.tasks.addTask(++priority, new EntityAIWanderToy(this, 16.0D));
         this.tasks.addTask(++priority, new EntityAIEatBlock(this));
-        this.tasks.addTask(++priority, aiUnko);
+        this.tasks.addTask(++priority, this.aiUnko);
         this.tasks.addTask(++priority, new EntityAIFatCatMate(this));
         this.tasks.addTask(++priority, new EntityAIFatCatWander(this, 0.5D));
         this.tasks.addTask(++priority, this.aiSit);
@@ -124,43 +160,30 @@ public class EntityFatCat extends EntityTameable {
         this.tasks.addTask(priority, new EntityAILookIdle(this));
         int targetPriority = 0;
         this.targetTasks.addTask(++targetPriority, new EntityAIHurtByTarget(this, true));
-        
-        // 育成モードオフ（デフォルト値に設定）
-        if (!FatCatMod.breeding_mode) {
-        	this.dataWatcher.updateObject(WEIGHT_DATA_INDEX, 4000);
-        	this.dataWatcher.updateObject(HUNGER_DATA_INDEX, HUNGER_MAX);
-        	this.dataWatcher.updateObject(BLADDER_DATA_INDEX, 0);
-        	this.dataWatcher.updateObject(TIREDNESS_DATA_INDEX, 0);
-        	this.dataWatcher.updateObject(FRIENDSHIP_DATA_INDEX, FRIENDSHIP_MAX);
-        	this.dataWatcher.updateObject(LOVENESS_DATA_INDEX, 0);
-        }
-        FatCatMod.proxy.log(world, "EntityFatCat initialized(%s)", this.toString());
-	}
+    }
 
 	@Override
 	protected void entityInit() {
+		
 		super.entityInit();
-		this.dataWatcher.addObject(WEIGHT_DATA_INDEX, 500);
-		this.dataWatcher.addObject(HUNGER_DATA_INDEX, 80);
-		this.dataWatcher.addObject(BLADDER_DATA_INDEX, 20);
-		this.dataWatcher.addObject(TIREDNESS_DATA_INDEX, 0);
-		this.dataWatcher.addObject(FRIENDSHIP_DATA_INDEX, 30);
-		this.dataWatcher.addObject(POSE_DATA_INDEX, 0);
-		this.dataWatcher.addObject(FACE_DATA_INDEX, 0);
-		this.dataWatcher.addObject(SKIN_DATA_INDEX, FatCatMod.instance.skinTypes.get(getRNG().nextInt(FatCatMod.instance.skinTypes.size())));
-		this.dataWatcher.addObject(LOVENESS_DATA_INDEX, LOVENESS_MAX/3);
+		
+		this.dataManager.register(WEIGHT_DATA_INDEX, 500);
+		this.dataManager.register(HUNGER_DATA_INDEX, 80);
+		this.dataManager.register(BLADDER_DATA_INDEX, 20);
+		this.dataManager.register(TIREDNESS_DATA_INDEX, 0);
+		this.dataManager.register(FRIENDSHIP_DATA_INDEX, 30);
+		this.dataManager.register(POSE_DATA_INDEX, 0);
+		this.dataManager.register(FACE_DATA_INDEX, 0);
+		this.dataManager.register(SKIN_DATA_INDEX, FatCatMod.instance.skinTypes.get(getRNG().nextInt(FatCatMod.instance.skinTypes.size())));
+		this.dataManager.register(LOVENESS_DATA_INDEX, LOVENESS_MAX/3);
 	}
 	
 	@Override
-	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
+	public EntityFatCat createChild(EntityAgeable p_90011_1_) {
 		EntityFatCat cat = new EntityFatCat(this.worldObj);
 		// setOwnerId
-		cat.setOwnerId(this.getOwner().getUniqueID().toString());
+		cat.setOwnerId(this.getOwner().getUniqueID());
 		return cat;
-	}
-	
-	public EntityFatCat createChild(EntityFatCat mate) {
-		return (EntityFatCat)createChild((EntityAgeable)mate);
 	}
 
 	@Override
@@ -305,13 +328,18 @@ public class EntityFatCat extends EntityTameable {
     {
         return false;
     }
-    
+	
+	/*
+	 * cat.worldObj.playSound((EntityPlayer)null, new BlockPos(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D), 
+    			SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+	 */
 
 	@Override
     /**
      * Returns the sound this mob makes while it's alive.
+     * protected String getLivingSound()
      */
-    protected String getLivingSound()
+    protected SoundEvent getAmbientSound()
     {
 		if (!this.worldObj.isRemote) {
 			if (!isInSleep()) {
@@ -320,43 +348,47 @@ public class EntityFatCat extends EntityTameable {
 		}
         if (this.isTamed()) {
         	if (this.isInLove()) {
-        		return "mob.cat.purr";
+        		return SoundEvents.ENTITY_CAT_PURR;
         	}
         	else if (isInSleep()) {
-        		return FatCatMod.MODID + ":sleep";
+        		return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "sleep"));
         	}
         	else {
         		if (this.rand.nextInt(4) == 0) {
-            		return FatCatMod.MODID + ":purreow";
+            		return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "purreow"));
+
         		} else {
-        			return FatCatMod.MODID + ":meow";
+        			return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "meow"));
+
         		}
         	}
         }
-        else {
-        	return "";
-        }
+        return null;
     }
 
 	@Override
     /**
      * Returns the sound this mob makes when it is hurt.
      */
-    protected String getHurtSound()
+    protected SoundEvent getHurtSound()
     {
 		setFace(Face.Myau);
 		cancelPose();
+		/*
         return FatCatMod.MODID + ":hitt";
+        */
+		return null;
     }
 
 	@Override
     /**
      * Returns the sound this mob makes on death.
      */
-    protected String getDeathSound()
+    protected SoundEvent getDeathSound()
     {
 		setFace(Face.Myau);
-        return FatCatMod.MODID + ":hitt";
+        //return FatCatMod.MODID + ":hitt";
+        return null;
     }
 
     public void setAISit(boolean sit) {
@@ -444,7 +476,7 @@ public class EntityFatCat extends EntityTameable {
 	}
 	
 	public int getWeight() {
-		return this.dataWatcher.getWatchableObjectInt(WEIGHT_DATA_INDEX);
+		return this.dataManager.get(WEIGHT_DATA_INDEX);
 	}
 	
 	public void setWeight(int weight, StatusChangeReason reason) {
@@ -453,12 +485,12 @@ public class EntityFatCat extends EntityTameable {
 		}
 
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setWeignt=%d", reason.name(), weight);
-		this.dataWatcher.updateObject(WEIGHT_DATA_INDEX, weight);
+		this.dataManager.set(WEIGHT_DATA_INDEX, weight);
 	}
 	
 	// Hunger/空腹度
 	public int getHunger() {
-		return this.dataWatcher.getWatchableObjectInt(HUNGER_DATA_INDEX);
+		return this.dataManager.get(HUNGER_DATA_INDEX);
 	}
 	
 	public void setHunger(int hunger, StatusChangeReason reason) {
@@ -474,7 +506,7 @@ public class EntityFatCat extends EntityTameable {
 		}
 		
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setHunger=%d", reason.name(), hunger);
-		this.dataWatcher.updateObject(HUNGER_DATA_INDEX, hunger);
+		this.dataManager.set(HUNGER_DATA_INDEX, hunger);
 	}
 	
 	// ものが食える
@@ -495,7 +527,7 @@ public class EntityFatCat extends EntityTameable {
 
 	// Bladder/便意（尿意）
 	public int getBladder() {
-		return this.dataWatcher.getWatchableObjectInt(BLADDER_DATA_INDEX);
+		return this.dataManager.get(BLADDER_DATA_INDEX);
 	}
 	
 	public void setBladder(int bladder, StatusChangeReason reason) {
@@ -517,13 +549,13 @@ public class EntityFatCat extends EntityTameable {
 			aiUnko.tryExec = true;
 		}
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setBladder=%d", reason.name(), bladder);
-		this.dataWatcher.updateObject(BLADDER_DATA_INDEX, bladder);
+		this.dataManager.set(BLADDER_DATA_INDEX, bladder);
 	}
 
 
 	// Tiredness/疲労度
 	public int getTiredness() {
-		return this.dataWatcher.getWatchableObjectInt(TIREDNESS_DATA_INDEX);
+		return this.dataManager.get(TIREDNESS_DATA_INDEX);
 	}
 	
 	public void setTiredness(int tiredness, StatusChangeReason reason) {
@@ -538,12 +570,12 @@ public class EntityFatCat extends EntityTameable {
 			tiredness = 0;
 		}
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setTiredness=%d", reason.name(), tiredness);
-		this.dataWatcher.updateObject(TIREDNESS_DATA_INDEX, tiredness);
+		this.dataManager.set(TIREDNESS_DATA_INDEX, tiredness);
 	}
 	
 	// Friendship/友好度
 	public int getFriendship() {
-		return this.dataWatcher.getWatchableObjectInt(FRIENDSHIP_DATA_INDEX);
+		return this.dataManager.get(FRIENDSHIP_DATA_INDEX);
 	}
 	
 	public void setFriendship(int friendship, StatusChangeReason reason) {
@@ -558,12 +590,12 @@ public class EntityFatCat extends EntityTameable {
 			friendship = 0;
 		}
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setFriendship=%d", reason.name(), friendship);
-		this.dataWatcher.updateObject(FRIENDSHIP_DATA_INDEX, friendship);
+		this.dataManager.set(FRIENDSHIP_DATA_INDEX, friendship);
 	}
 	
 	// Type of skin
 	public int getSkinType() {
-		return this.dataWatcher.getWatchableObjectInt(SKIN_DATA_INDEX);
+		return this.dataManager.get(SKIN_DATA_INDEX);
 	}
 	
 	public void setSkinType(int type) {
@@ -574,12 +606,12 @@ public class EntityFatCat extends EntityTameable {
 		if (type < 0) {
 			type = max;
 		}
-		this.dataWatcher.updateObject(SKIN_DATA_INDEX, type);
+		this.dataManager.set(SKIN_DATA_INDEX, type);
 	}
 	
 	// 恋愛度
 	public int getLoveness() {
-		return this.dataWatcher.getWatchableObjectInt(LOVENESS_DATA_INDEX);
+		return this.dataManager.get(LOVENESS_DATA_INDEX);
 	}
 
 	public void setLoveness(int loveness, StatusChangeReason reason) {
@@ -594,14 +626,15 @@ public class EntityFatCat extends EntityTameable {
 			loveness = 0;
 		}
 		FatCatMod.proxy.log(this.worldObj, "reason=%s, setLoveness=%d", reason.name(), loveness);
-		this.dataWatcher.updateObject(LOVENESS_DATA_INDEX, loveness);
+		this.dataManager.set(LOVENESS_DATA_INDEX, loveness);
 	}
 
+//	public boolean interact(EntityPlayer player) {
 	@Override
-	public boolean interact(EntityPlayer player) {
-        ItemStack itemstack = player.inventory.getCurrentItem();
-        
-        if (super.interact(player)) {
+	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+    {
+		ItemStack itemstack = player.inventory.getCurrentItem();
+        if (super.processInteract(player, hand, itemstack)) {
         	return true;
         }
         else if (itemstack != null) {
@@ -617,9 +650,8 @@ public class EntityFatCat extends EntityTameable {
             openGui(player);
     		return true;
         }
-        
         return false;
-	}
+    }
 	
 	/**
 	 * 小麦などでinteractされるのを回避するためBreedingItemは常にfalse
@@ -642,35 +674,35 @@ public class EntityFatCat extends EntityTameable {
 			return false;
 		}
 		if (FatCatMod.DEBUG) {
-			if (itemstack.getItem() == Items.wooden_shovel) {
+			if (itemstack.getItem() == Items.WOODEN_SHOVEL) {
 				setWeight(getWeight()-500, StatusChangeReason.Debug);
 				return true;
-			} else if (itemstack.getItem() == Items.iron_shovel) {
+			} else if (itemstack.getItem() == Items.IRON_SHOVEL) {
 				setWeight(getWeight()+500, StatusChangeReason.Debug);
 				return true;
-			} else if (itemstack.getItem() == Items.wooden_pickaxe) {
+			} else if (itemstack.getItem() == Items.WOODEN_PICKAXE) {
 				int type = FatCatMod.instance.skinTypes.indexOf(getSkinType())-1;
 				if (type < 0) type = FatCatMod.instance.skinTypes.size()-1;
 				setSkinType(FatCatMod.instance.skinTypes.get(type));
 				return true;
-			} else if (itemstack.getItem() == Items.iron_pickaxe) {
+			} else if (itemstack.getItem() == Items.IRON_PICKAXE) {
 				int type = FatCatMod.instance.skinTypes.indexOf(getSkinType())+1;
 				if (type >= FatCatMod.instance.skinTypes.size()) type = 0;
 				setSkinType(FatCatMod.instance.skinTypes.get(type));
 				return true;
-			} else if (itemstack.getItem() == Items.bone) {
+			} else if (itemstack.getItem() == Items.BONE) {
 				setHunger(getHunger()-HUNGER_MAX/5, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.HEART);
 				return true;
-			} else if (itemstack.getItem() == Items.apple) {
+			} else if (itemstack.getItem() == Items.APPLE) {
 				setLoveness(getLoveness()+500, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.HEART);
 				return true;
-			}  else if (itemstack.getItem() == Items.fish) {
+			}  else if (itemstack.getItem() == Items.FISH) {
 				setFriendship(getFriendship()+500, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.HEART);
 				return true;
-			}  else if (itemstack.getItem() == Items.potato) {
+			}  else if (itemstack.getItem() == Items.POTATO) {
 				setFriendship(getFriendship()-500, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.VILLAGER_ANGRY);
 				return true;
@@ -689,7 +721,8 @@ public class EntityFatCat extends EntityTameable {
 		itemstack.damageItem(1, player);
 		if (itemstack.stackSize <= 0)
 		{
-			player.destroyCurrentEquippedItem();
+			//player.destroyCurrentEquippedItem();
+			player.inventory.mainInventory[player.inventory.currentItem] = null;
 		}
 		setPose(Pose.Brushing);
 		if (getRNG().nextInt(10) == 0) {
@@ -728,22 +761,22 @@ public class EntityFatCat extends EntityTameable {
 				setFace(Face.None);
 			}
 		}
-		this.dataWatcher.updateObject(POSE_DATA_INDEX, pose.ordinal());
+		this.dataManager.set(POSE_DATA_INDEX, pose.ordinal());
 	}
 	
 	public Pose getPose() {
-		return Pose.values()[this.dataWatcher.getWatchableObjectInt(POSE_DATA_INDEX)];
+		return Pose.values()[this.dataManager.get(POSE_DATA_INDEX)];
 	}
 	 
 	public void setFace(Face face) {
 		if (face == Face.Myau) {
 			this.myauTick = 8;
 		}
-		this.dataWatcher.updateObject(FACE_DATA_INDEX, face.ordinal());
+		this.dataManager.set(FACE_DATA_INDEX, face.ordinal());
 	}
 	
 	public Face getFace() {
-		return Face.values()[this.dataWatcher.getWatchableObjectInt(FACE_DATA_INDEX)];
+		return Face.values()[this.dataManager.get(FACE_DATA_INDEX)];
 	}
 	
 	public void doUnko() {
@@ -757,7 +790,8 @@ public class EntityFatCat extends EntityTameable {
 			entityitem.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
 
 			worldObj.spawnEntityInWorld(entityitem);
-			worldObj.playSoundEffect(posX, posY, posZ, FatCatMod.MODID + ":unko", 3.0F, 12.0f);
+			//worldObj.playSoundEffect(posX, posY, posZ, FatCatMod.MODID + ":unko", 3.0F, 12.0f);
+			this.playSound(new SoundEvent(new ResourceLocation(FatCatMod.MODID, "unko")), 3.0F, 12.0f);
 		}
 		setBladder(0, StatusChangeReason.Unkoed);
 	}
@@ -846,7 +880,7 @@ public class EntityFatCat extends EntityTameable {
     }
     
     private void setAvoidWaters(boolean avoid) {
-    	((PathNavigateGround)this.getNavigator()).setAvoidsWater(avoid);
+    	//((PathNavigateGround)this.getNavigator()).setAvoidsWater(avoid);
     }
     
     @Override
@@ -856,24 +890,25 @@ public class EntityFatCat extends EntityTameable {
     protected void dropFewItems(boolean killed, int num)
     {
     	if (this.hasCustomName()) {
-    		ItemStack tag = new ItemStack(Items.name_tag);
+    		ItemStack tag = new ItemStack(Items.NAME_TAG);
     		tag.setStackDisplayName(this.getCustomNameTag());
     		entityDropItem(tag, 0.0F);
     	}
     }
     
-    @Override
-    /*
-     * パラメータ変更時に呼び出される。サイズを変更する。
-     * @see net.minecraft.entity.Entity#func_145781_i(int)
+    /**
+     * onDataWatcherUpdateをnotifyDataManagerChangeへ変換
+     * パラメータ変更時に呼び出される。サイズを変更する
      */
-    public void onDataWatcherUpdate(int id)
+    @Override
+    public void notifyDataManagerChange(DataParameter<?> key)
     {
-        super.onDataWatcherUpdate(id);
-
-        if (id == WEIGHT_DATA_INDEX)
+        super.notifyDataManagerChange(key);
+        if (key == WEIGHT_DATA_INDEX)
         {
         	setCatScale();
         }
     }
+    
+    
 }

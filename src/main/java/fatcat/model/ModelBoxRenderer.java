@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 
 public class ModelBoxRenderer extends ModelRenderer {
 
@@ -65,7 +65,7 @@ public class ModelBoxRenderer extends ModelRenderer {
                 {
                     this.displayListEx = GLAllocation.generateDisplayLists(1);
                     GL11.glNewList(this.displayListEx, GL11.GL_COMPILE);
-                    WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
+                    VertexBuffer worldrenderer = Tessellator.getInstance().getBuffer();
 
                     for (int i = 0; i < this.cubeList.size(); ++i)
                     {
