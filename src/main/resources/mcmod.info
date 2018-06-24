@@ -1,13 +1,13 @@
 [
 {
   "modid": "fatcat",
-  "name": "Fat Cat MOD",
-  "description": "FatCat MOD add fat cat mobs to Minecraft. You can breed a fat cat.",
+  "name": "Fat Cat Mod Unofficial",
+  "description": "FatCat MOD add fat cat mobs to Minecraft. You can breed a fat cat. Original MOD https://github.com/shu3/FatCatMOD",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=28511",
+  "url": "",
   "updateUrl": "",
-  "authorList": ["shu3"],
+  "authorList": ["firis", "shu3"],
   "credits": "Made possible with help many niconico users",
   "logoFile": "",
   "screenshots": [],
