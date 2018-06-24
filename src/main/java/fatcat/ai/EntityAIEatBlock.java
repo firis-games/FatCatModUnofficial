@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAIEatBlock extends EntityAIBase {
+	
 	private EntityFatCat cat;
 	private World world;
 	private float frequency;
@@ -89,6 +90,10 @@ public class EntityAIEatBlock extends EntityAIBase {
         this.giveuptime = 50;
         this.cat.setAISit(false);
         this.cat.setSitting(false);
+        
+        //食べ物の位置へ
+        this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
+        
     }
 
     /**

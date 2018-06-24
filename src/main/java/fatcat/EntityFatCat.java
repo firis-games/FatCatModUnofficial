@@ -38,6 +38,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -138,19 +139,37 @@ public class EntityFatCat extends EntityTameable {
     {
 		
 		this.aiUnko = new EntityAIShit(this);
-		this.aiSleep = new EntityAIFatCatSleep(this);
+		
 		this.aiSit = new EntityAISit(this);
-		//this.aiSit.setSitting(true);
+		this.aiSit.setSitting(true);
+
+		this.aiSleep = new EntityAIFatCatSleep(this);
+		
+		/*
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
+        this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+        this.tasks.addTask(3, new EntityAITempt(this, 1.1D, Items.WHEAT, false));
+        this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
+        this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        */
 		
 		int priority = 0;
         this.tasks.addTask(++priority, new EntityAISwimming(this));
-        this.tasks.addTask(++priority, this.aiSit);
         this.tasks.addTask(++priority, new EntityAIAttackUnfriendlyOwner(this));
+
         this.tasks.addTask(++priority, new EntityAIEatEntityItem(this,0.25f,0.6f,100));
+        this.tasks.addTask(++priority, new EntityAIEatBlock(this));
+        
+        this.tasks.addTask(++priority, this.aiUnko);
+        
         this.tasks.addTask(++priority, new EntityAIFatCatSit(this));
         this.tasks.addTask(++priority, new EntityAIWanderToy(this, 16.0D));
-        this.tasks.addTask(++priority, new EntityAIEatBlock(this));
-        this.tasks.addTask(++priority, this.aiUnko);
+        
+        this.tasks.addTask(++priority, this.aiSit);
+        
         this.tasks.addTask(++priority, new EntityAIFatCatMate(this));
         this.tasks.addTask(++priority, new EntityAIFatCatWander(this, 0.5D));
         this.tasks.addTask(++priority, this.aiSit);
@@ -160,6 +179,10 @@ public class EntityFatCat extends EntityTameable {
         this.tasks.addTask(priority, new EntityAILookIdle(this));
         int targetPriority = 0;
         this.targetTasks.addTask(++targetPriority, new EntityAIHurtByTarget(this, true));
+        
+		
+		
+		
     }
 
 	@Override
@@ -791,7 +814,7 @@ public class EntityFatCat extends EntityTameable {
 
 			worldObj.spawnEntityInWorld(entityitem);
 			//worldObj.playSoundEffect(posX, posY, posZ, FatCatMod.MODID + ":unko", 3.0F, 12.0f);
-			this.playSound(new SoundEvent(new ResourceLocation(FatCatMod.MODID, "unko")), 3.0F, 12.0f);
+			worldObj.playSound(null, new BlockPos(posX, posY, posZ), new SoundEvent(new ResourceLocation(FatCatMod.MODID, "unko")), null, 3.0F, 12.0f);
 		}
 		setBladder(0, StatusChangeReason.Unkoed);
 	}
@@ -877,10 +900,6 @@ public class EntityFatCat extends EntityTameable {
     public float getInterestedAngle(float a)
     {
         return (this.neckAngleSpeed + (this.nextNeckAngleSpeed - this.neckAngleSpeed) * a) * 0.15F * (float)Math.PI;
-    }
-    
-    private void setAvoidWaters(boolean avoid) {
-    	//((PathNavigateGround)this.getNavigator()).setAvoidsWater(avoid);
     }
     
     @Override

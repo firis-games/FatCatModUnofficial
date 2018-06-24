@@ -33,6 +33,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 		//this.speed = speed;
 		this.giveuplimit = giveuplimit;
 		this.frequency = frequency;
+		this.setMutexBits(15);
 	}
 
 	@Override
@@ -87,6 +88,10 @@ public class EntityAIEatEntityItem extends EntityAIBase {
         this.cat.setSitting(false);
         this.cat.setSprinting(true);
         this.cat.cancelPose();
+        
+        //食べ物の位置へ
+        this.cat.getNavigator().tryMoveToXYZ(this.closestItem.posX, this.closestItem.posY, this.closestItem.posZ, 1.0F);
+        
     }
 
     /**
@@ -108,6 +113,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
         if ((this.giveuptime%10) == 0) {
 //        	boolean tried = this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, speed);
         }
+        
         if (isCollideEntityItem(this.cat, this.closestItem)) {
         	this.eatEntityItem(this.closestItem);
         	this.cat.eatEntityBounus(this.closestItem);

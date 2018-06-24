@@ -21,7 +21,7 @@ public class EntityAIShit extends EntityAIBase {
 	public EntityAIShit(EntityFatCat cat) {
 		this.cat = cat;
 		this.world = cat.worldObj;
-        this.setMutexBits(13);
+        this.setMutexBits(18);
 	}
 
 	@Override
@@ -73,6 +73,10 @@ public class EntityAIShit extends EntityAIBase {
 		unkoCountDown = 0;
 		cat.setAISit(false);
 		this.cat.cancelPose();
+		
+		this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
+        
+		
 	}
 	
 	@Override
