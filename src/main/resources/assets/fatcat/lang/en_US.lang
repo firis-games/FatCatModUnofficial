@@ -11,3 +11,5 @@ fatcat.gui.status.health=HP
 fatcat.gui.status.tiredness=Tiredness
 fatcat.gui.status.friendship=Friendship
 fatcat.gui.status.loveness=Loveness
+itemGroup.tabFatCat=FatCatMod
+entity.fatcat.FatCat.name=FatCat

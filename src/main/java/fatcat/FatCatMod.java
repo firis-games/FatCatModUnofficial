@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import fatcat.gui.GuiStatusHandler;
 import net.minecraft.client.resources.DefaultResourcePack;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -31,6 +32,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = FatCatMod.MODID, version = FatCatMod.VERSION)
 public class FatCatMod {
@@ -204,5 +207,17 @@ public class FatCatMod {
 		java.util.Collections.sort(types);
 		return types;
 	}
+	
+	/**
+     * クリエイティブタブ
+     */
+    public static final CreativeTabs FatCatModTab = new CreativeTabs("tabFatCat") {
+    	@SideOnly(Side.CLIENT)
+    	@Override
+        public Item getTabIconItem()
+        {
+            return FatCatMod.egg;
+        }
+};
 
 }

@@ -11,3 +11,5 @@ fatcat.gui.status.health=HP
 fatcat.gui.status.tiredness=疲労度
 fatcat.gui.status.friendship=友好度
 fatcat.gui.status.loveness=恋愛度
+itemGroup.tabFatCat=デブ猫MOD
+entity.fatcat.FatCat.name=デブ猫

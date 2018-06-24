@@ -1,6 +1,5 @@
 package fatcat;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +14,8 @@ public class ItemCatBrush extends Item {
 		super();
         this.setMaxDamage(64);
         this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.TOOLS);
+        //this.setCreativeTab(CreativeTabs.TOOLS);
+        this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
 	/**

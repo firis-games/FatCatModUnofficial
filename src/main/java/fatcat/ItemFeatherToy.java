@@ -1,6 +1,5 @@
 package fatcat;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +15,8 @@ public class ItemFeatherToy extends Item {
 		super();
         this.setMaxDamage(MAX_DAMAGE);
         this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.TOOLS);
+        //this.setCreativeTab(CreativeTabs.TOOLS);
+        this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
 	/**

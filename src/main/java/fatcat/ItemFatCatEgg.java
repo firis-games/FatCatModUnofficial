@@ -1,6 +1,5 @@
 package fatcat;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,7 +12,8 @@ import net.minecraft.world.World;
 public class ItemFatCatEgg extends Item {
 	public ItemFatCatEgg() {
 		super();
-        this.setCreativeTab(CreativeTabs.MISC);
+        //this.setCreativeTab(CreativeTabs.MISC);
+        this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
 	@Override

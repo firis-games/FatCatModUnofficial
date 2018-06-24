@@ -3,7 +3,6 @@ package fatcat;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,7 +16,8 @@ public class ItemFatCatUnko extends Item {
 
 	public ItemFatCatUnko() {
 		super();
-        this.setCreativeTab(CreativeTabs.MISC);
+        //this.setCreativeTab(CreativeTabs.MISC);
+        this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
 	/**
