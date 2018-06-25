@@ -18,7 +18,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
     public EntityAIFatCatMate(EntityFatCat cat) {
     	this.cat = cat;
         this.worldObj = cat.worldObj;
-        this.setMutexBits(15);
+        this.setMutexBits(14);
 	}
  
 	@Override
@@ -45,6 +45,11 @@ public class EntityAIFatCatMate extends EntityAIBase {
        		this.mate = entity;
  
 //       		System.out.println("EntityAIFatCatMate(shouldExecute): exec="+exec+",");
+        }
+        
+        //エラーチェック
+        if (this.cat == null || this.mate == null || this.cat.getOwnerId() == null || this.mate.getOwnerId() == null) {
+        	exec = false;
         }
         
         return exec;
@@ -82,17 +87,21 @@ public class EntityAIFatCatMate extends EntityAIBase {
     {
         --this.matingTimeout;
         this.cat.getLookHelper().setLookPositionWithEntity(this.mate, 10.0F, 30.0F);
-
+        //this.cat.getNavigator().tryMoveToEntityLiving(this.mate, 0.2F);
+        
         if (tick % 50 == 0) {
         	cat.generateRandomParticles(EnumParticleTypes.HEART);
         }
 //    	System.out.println("EntityAIFatCatMate(updateTask): tick="+tick);
-
-        if (this.cat.getDistanceSqToEntity(this.mate) > 2.25D)
+        
+        //ねこのサイズで近くの判定がうまくいかない
+        //からだの大きさを考慮してサイズで判定してみる
+        //if (this.cat.getDistanceSqToEntity(this.mate) > 2.25D)
+       	if (this.cat.getDistanceSqToEntity(this.mate) > this.mate.width*2 + this.cat.width*2)
         {
             this.cat.getNavigator().tryMoveToEntityLiving(this.mate, 0.25D);
         }
-        else if (this.matingTimeout == 0 && this.mate.isMating)
+        else if (this.matingTimeout <= 0 && this.mate.isMating)
         {
             this.giveBirth();
         }

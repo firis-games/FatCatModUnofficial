@@ -33,7 +33,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 		//this.speed = speed;
 		this.giveuplimit = giveuplimit;
 		this.frequency = frequency;
-		this.setMutexBits(15);
+		this.setMutexBits(12);
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class EntityAIEatEntityItem extends EntityAIBase {
         this.cat.setSprinting(true);
         this.cat.cancelPose();
         
-        //食べ物の位置へ
-        this.cat.getNavigator().tryMoveToXYZ(this.closestItem.posX, this.closestItem.posY, this.closestItem.posZ, 1.0F);
+        ////食べ物の位置へ
+        //this.cat.getNavigator().tryMoveToXYZ(this.closestItem.posX, this.closestItem.posY, this.closestItem.posZ, 1.0F);
         
     }
 
@@ -109,10 +109,22 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 	@Override
     public void updateTask()
     {
+		/*
         this.cat.getLookHelper().setLookPosition(this.closestItem.posX, this.closestItem.posY + (double)this.closestItem.getEyeHeight(), this.closestItem.posZ, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
 //        	boolean tried = this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, speed);
         }
+        
+        if (isCollideEntityItem(this.cat, this.closestItem)) {
+        	this.eatEntityItem(this.closestItem);
+        	this.cat.eatEntityBounus(this.closestItem);
+        }
+        --this.giveuptime;
+        */
+		
+		//ご飯を食べる処理を変更
+        this.cat.getLookHelper().setLookPositionWithEntity(this.closestItem, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getNavigator().tryMoveToEntityLiving(this.closestItem, 1.0F);
         
         if (isCollideEntityItem(this.cat, this.closestItem)) {
         	this.eatEntityItem(this.closestItem);
@@ -131,10 +143,10 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     			this.cat.getRNG().nextGaussian() * 0.15D, this.cat.getRNG().nextDouble() * 0.2D, this.cat.getRNG().nextGaussian() * 0.15D, 10,
     			new int[] {Item.getIdFromItem(food.getEntityItem().getItem())});
     	
+    	//ご飯を食べる音
     	cat.worldObj.playSound((EntityPlayer)null, new BlockPos(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D), 
     			SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     	    	
-    	
     	// もしPlayerが取っても加算されないようにする
     	if (food.getEntityItem() != null) {
     		food.getEntityItem().stackSize = 0;

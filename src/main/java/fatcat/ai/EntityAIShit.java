@@ -74,7 +74,7 @@ public class EntityAIShit extends EntityAIBase {
 		cat.setAISit(false);
 		this.cat.cancelPose();
 		
-		this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
+		//this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
         
 		
 	}
@@ -92,7 +92,7 @@ public class EntityAIShit extends EntityAIBase {
 		}
 		
         this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord+0.5D, this.closestPos.yCoord, this.closestPos.zCoord+0.5D, 10.0F, (float)this.cat.getVerticalFaceSpeed());
-        if ((this.giveuptime%10) == 0) {
+        if ((this.giveuptime % 10) == 0) {
         	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5D, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5D, 0.3f);
         }
 //        System.out.println("EntityAIShit distance: " + this.closestPos.toString() + ", distance=" + cat.getDistance(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord));

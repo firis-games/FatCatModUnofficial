@@ -13,13 +13,13 @@ public class EntityAIFatCatSleep extends EntityAIBase {
 	public EntityAIFatCatSleep(EntityFatCat cat) {
 		this.cat = cat;
 		//this.world = cat.worldObj;
-		this.setMutexBits(16);
+		this.setMutexBits(21);
 	}
 
 	@Override
 	public boolean shouldExecute() {
 //		System.out.println("EntityAIFatCatSleep: shouldExec="+(this.cat.getTiredness()));
-		return (this.cat.getTiredness() >= EntityFatCat.TIREDNESS_MAX);
+		return (this.cat.getTiredness() >= EntityFatCat.TIREDNESS_MAX - 200);
 	}
 
 

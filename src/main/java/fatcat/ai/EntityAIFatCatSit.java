@@ -24,7 +24,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
 		this.world = cat.worldObj;
 		this.frequency = 0.003f;
 //		this.frequency = 0.1f;
-        this.setMutexBits(12);
+        this.setMutexBits(15);
 	}
 
 	@Override

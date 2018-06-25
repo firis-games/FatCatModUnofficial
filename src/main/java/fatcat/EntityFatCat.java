@@ -158,31 +158,40 @@ public class EntityFatCat extends EntityTameable {
 		
 		int priority = 0;
         this.tasks.addTask(++priority, new EntityAISwimming(this));
+        
         this.tasks.addTask(++priority, new EntityAIAttackUnfriendlyOwner(this));
 
+        //食べ物系
         this.tasks.addTask(++priority, new EntityAIEatEntityItem(this,0.25f,0.6f,100));
         this.tasks.addTask(++priority, new EntityAIEatBlock(this));
         
+        //トイレ
         this.tasks.addTask(++priority, this.aiUnko);
+        
+        
+        
+        //睡眠
+        this.tasks.addTask(++priority, aiSleep);
+        
         
         this.tasks.addTask(++priority, new EntityAIFatCatSit(this));
         this.tasks.addTask(++priority, new EntityAIWanderToy(this, 16.0D));
         
+        //繁殖関連
+        this.tasks.addTask(++priority, new EntityAIFatCatMate(this));
+        
+        this.tasks.addTask(++priority, new EntityAIFatCatWander(this, 0.5D));
+        
+        this.tasks.addTask(++priority, new EntityAIFatCatBeg(this, 8.0F));
+        
         this.tasks.addTask(++priority, this.aiSit);
         
-        this.tasks.addTask(++priority, new EntityAIFatCatMate(this));
-        this.tasks.addTask(++priority, new EntityAIFatCatWander(this, 0.5D));
-        this.tasks.addTask(++priority, this.aiSit);
-        this.tasks.addTask(++priority, new EntityAIFatCatBeg(this, 8.0F));
         priority++;
         this.tasks.addTask(priority, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
         this.tasks.addTask(priority, new EntityAILookIdle(this));
         int targetPriority = 0;
         this.targetTasks.addTask(++targetPriority, new EntityAIHurtByTarget(this, true));
-        
-		
-		
-		
+       	
     }
 
 	@Override
@@ -400,7 +409,7 @@ public class EntityFatCat extends EntityTameable {
 		/*
         return FatCatMod.MODID + ":hitt";
         */
-		return null;
+		return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "hitt"));
     }
 
 	@Override
@@ -411,7 +420,7 @@ public class EntityFatCat extends EntityTameable {
     {
 		setFace(Face.Myau);
         //return FatCatMod.MODID + ":hitt";
-        return null;
+    	return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "hitt"));
     }
 
     public void setAISit(boolean sit) {
