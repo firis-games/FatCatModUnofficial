@@ -19,4 +19,9 @@
 オリジナルとは以下の点が異なります。
 * デブ猫たまごの入手方法 チェストからクラフトへ変更
 * 専用のクリエイティブタブを追加
-* 1.10.2対応のためAI処理および描画処理の改変
+* 1.10.2対応のためAI処理および描画処理の改変  
+
+## LICENCE
+This source code is copied from https://github.com/shu3/FatCatMOD and modified.  
+MIT License  
+Copyright (c) 2015 shu3
