@@ -1,0 +1,19 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"xy ",
+		"xy ",
+		" y "
+	],
+	"key": {
+		"x": {
+			"item": "fatcat:fatcat_furball"
+		},
+		"y": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "fatcat:fatcat_feather_toy"
+	}
+}
