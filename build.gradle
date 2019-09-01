@@ -10,6 +10,12 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
+repositories {
+    maven {
+    	name = "JEI"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+}
 
 version = "1.0.3.uo.mc1.10.2"
 group= "fatcat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -54,7 +60,9 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    
+    compile "mezz.jei:jei_1.12.2:4.15.0.268"
+    
 }
 
 processResources {
