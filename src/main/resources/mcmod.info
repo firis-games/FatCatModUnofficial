@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "modid": "fatcat",
+  "name": "Fat Cat Mod Unofficial",
+  "description": "FatCat MOD add fat cat mobs to Minecraft. You can breed a fat cat. Original MOD https://github.com/shu3/FatCatMOD",
+  "version": "1.0.3.uo",
+  "mcversion": "1.10.2",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["firis", "shu3"],
+  "credits": "Made possible with help many niconico users",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
