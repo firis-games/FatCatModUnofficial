@@ -27,9 +27,9 @@ public class EntityAIFatCatSleep extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
 	@Override
-    public boolean continueExecuting()
+    public boolean shouldContinueExecuting()
     {
-//		System.out.println("EntityAIFatCatSleep: continueExecuting="+(this.cat.getTiredness() > 0));
+//		System.out.println("EntityAIFatCatSleep: shouldContinueExecuting="+(this.cat.getTiredness() > 0));
         return (this.cat.getTiredness() > 0 && !tryWakeup);
     }
 

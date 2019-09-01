@@ -52,14 +52,14 @@ public class GuiStatus extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String name = this.cat.hasCustomName() ? this.cat.getCustomNameTag() : I18n.format("fatcat.gui.status.noname");
-		this.fontRendererObj.drawString(name, 10, 70, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.weight")+": "+cat.getWeight()+"g", 70, 12, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.health"), 70, 34, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.hunger"), 130, 34, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.bladder"), 70, 56, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.tiredness"), 130, 56, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.friendship"), 70, 78, 0x404040);
-		this.fontRendererObj.drawString(I18n.format("fatcat.gui.status.loveness"), 130, 78, 0x404040);
+		this.fontRenderer.drawString(name, 10, 70, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.weight")+": "+cat.getWeight()+"g", 70, 12, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.health"), 70, 34, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.hunger"), 130, 34, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.bladder"), 70, 56, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.tiredness"), 130, 56, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.friendship"), 70, 78, 0x404040);
+		this.fontRenderer.drawString(I18n.format("fatcat.gui.status.loveness"), 130, 78, 0x404040);
 	}
 	
 	private void drawIconBar(double bar, double max, int maxNum, int x, int y, int iconX, int iconY, int emptyX, int emptyY) {

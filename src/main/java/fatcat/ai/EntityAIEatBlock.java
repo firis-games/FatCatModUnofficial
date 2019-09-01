@@ -23,7 +23,7 @@ public class EntityAIEatBlock extends EntityAIBase {
 
 	public EntityAIEatBlock(EntityFatCat cat) {
 		this.cat = cat;
-		this.world = cat.worldObj;
+		this.world = cat.getEntityWorld();
 		this.frequency = 0.25f;
         this.setMutexBits(11);
 //		this.frequency = 0.01F;
@@ -53,8 +53,10 @@ public class EntityAIEatBlock extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					Vec3d pos = new Vec3d(MathHelper.floor(cat.posX+x-8), 
+							MathHelper.floor(cat.posY+y-1), 
+							MathHelper.floor(cat.posZ+z-8));
+					double d = cat.getDistance(pos.x, pos.y, pos.z);
 					if (checkBlock(pos) && (d > 1.0D) && (d < closestPosDistance)) {
 						FatCatMod.proxy.log(this.world, "EntityAIEatBlock: found %s", pos.toString());
 						this.closestPos = pos;
@@ -92,7 +94,7 @@ public class EntityAIEatBlock extends EntityAIBase {
         this.cat.setSitting(false);
         
         //食べ物の位置へ
-        this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
+        this.cat.getNavigator().tryMoveToXYZ(this.closestPos.x, this.closestPos.y + 1, this.closestPos.z, 1.0F);
         
     }
 
@@ -110,20 +112,20 @@ public class EntityAIEatBlock extends EntityAIBase {
      */
     public void updateTask()
     {
-        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord+0.5, this.closestPos.yCoord, this.closestPos.zCoord+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPos.x+0.5, this.closestPos.y, this.closestPos.z+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5, 0.5f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.x+0.5, this.closestPos.y+1, this.closestPos.z+0.5, 0.5f);
         }
         if (cat.getDistanceSqToCenter(new BlockPos(closestPos)) < 1.0D) {
-        	this.cat.eatBlockBounus(world.getBlockState(new BlockPos(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord)).getBlock());
-        	this.world.destroyBlock(new BlockPos(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord), false);
+        	this.cat.eatBlockBounus(world.getBlockState(new BlockPos(closestPos.x, closestPos.y, closestPos.z)).getBlock());
+        	this.world.destroyBlock(new BlockPos(closestPos.x, closestPos.y, closestPos.z), false);
         	this.giveuptime = 0;
         }
         --this.giveuptime;
     }
     
     private boolean checkBlock(Vec3d pos) throws RuntimeException {
-    	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
+    	BlockPos blockPos = new BlockPos(pos.x, pos.y, pos.z);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
     		return false;

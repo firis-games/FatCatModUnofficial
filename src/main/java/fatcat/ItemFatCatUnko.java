@@ -20,13 +20,15 @@ public class ItemFatCatUnko extends Item {
         this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
-	/**
+    /**
      * Called when a Block is right-clicked with this Item
      */
 	@Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-		if (applyUnko(stack, worldIn, pos, playerIn))
+    	ItemStack stack = player.getHeldItem(hand);
+    	
+		if (applyUnko(stack, worldIn, pos, player))
         {
             if (!worldIn.isRemote)
             {
@@ -54,8 +56,7 @@ public class ItemFatCatUnko extends Item {
                     {
                         igrowable.grow(worldIn, worldIn.rand, pos, iblockstate);
                     }
-
-                    --stack.stackSize;
+                    stack.shrink(1);
                 }
 
                 return true;

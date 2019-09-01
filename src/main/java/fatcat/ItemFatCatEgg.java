@@ -16,12 +16,14 @@ public class ItemFatCatEgg extends Item {
         this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
-	@Override
-	/**
+    /**
      * Called when a Block is right-clicked with this Item
      */
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	@Override
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+		ItemStack stack = player.getHeldItem(hand);
+		
         if (worldIn.isRemote)
         {
             return EnumActionResult.SUCCESS;
@@ -33,14 +35,14 @@ public class ItemFatCatEgg extends Item {
             EntityFatCat entity = new EntityFatCat(worldIn);
             entity.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
             // setOwnerId
-            entity.setOwnerId(playerIn.getUniqueID());
-            worldIn.spawnEntityInWorld(entity);
+            entity.setOwnerId(player.getUniqueID());
+            worldIn.spawnEntity(entity);
 
             if (entity != null)
             {
-                if (!playerIn.capabilities.isCreativeMode)
+                if (!player.capabilities.isCreativeMode)
                 {
-                    --stack.stackSize;
+                    stack.shrink(1);
                 }
             }
 

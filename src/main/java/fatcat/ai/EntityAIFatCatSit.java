@@ -21,7 +21,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
 	
 	public EntityAIFatCatSit(EntityFatCat cat) {
 		this.cat = cat;
-		this.world = cat.worldObj;
+		this.world = cat.getEntityWorld();
 		this.frequency = 0.003f;
 //		this.frequency = 0.1f;
         this.setMutexBits(15);
@@ -52,10 +52,10 @@ public class EntityAIFatCatSit extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
-					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					Vec3d pos = new Vec3d(MathHelper.floor(cat.posX+x-8), MathHelper.floor(cat.posY+y-1), MathHelper.floor(cat.posZ+z-8));
+					double d = cat.getDistance(pos.x, pos.y, pos.z);
 					if (checkBlock(findType, pos) && (d > 1.0D) && (d < closestPosDistance)) {
-						FatCatMod.proxy.log(cat.worldObj, "EntityAIFatCatSit: found=<%s>", pos);
+						FatCatMod.proxy.log(cat.getEntityWorld(), "EntityAIFatCatSit: found=<%s>", pos);
 						this.closestPlatePos = pos;
 						closestPosDistance = d;
 					}
@@ -71,7 +71,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting()
+    public boolean shouldContinueExecuting()
     {
         if (!(cat.getDistanceSqToCenter(new BlockPos(closestPlatePos).up()) < 1.0D) && this.giveuptime > 0 && checkBlock(findType, closestPlatePos)) {
         	return true;
@@ -105,15 +105,15 @@ public class EntityAIFatCatSit extends EntityAIBase {
      */
     public void updateTask()
     {
-        this.cat.getLookHelper().setLookPosition(this.closestPlatePos.xCoord+0.5, this.closestPlatePos.yCoord, this.closestPlatePos.zCoord+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPlatePos.x+0.5, this.closestPlatePos.y, this.closestPlatePos.z+0.5, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime%10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPlatePos.xCoord+0.5, this.closestPlatePos.yCoord+1, this.closestPlatePos.zCoord+0.5, 0.3f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPlatePos.x+0.5, this.closestPlatePos.y+1, this.closestPlatePos.z+0.5, 0.3f);
         }
         --this.giveuptime;
     }
     
     private boolean checkBlock(FindType type, Vec3d pos) throws RuntimeException {
-    	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
+    	BlockPos blockPos = new BlockPos(pos.x, pos.y, pos.z);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
     		return false;
@@ -128,7 +128,7 @@ public class EntityAIFatCatSit extends EntityAIBase {
     		}
     	}
     	else if (type == FindType.Bed) {
-    		if (block == Blocks.BED && block.isBedFoot(cat.worldObj, blockPos)) {
+    		if (block == Blocks.BED && block.isBedFoot(cat.getEntityWorld(), blockPos)) {
     			return true;
     		}
     	}

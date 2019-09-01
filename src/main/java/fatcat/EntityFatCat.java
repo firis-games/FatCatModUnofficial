@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.annotation.Nullable;
 
+import fatcat.FatCatMod.FcmItems;
 import fatcat.ai.EntityAIAttackUnfriendlyOwner;
 import fatcat.ai.EntityAIEatBlock;
 import fatcat.ai.EntityAIEatEntityItem;
@@ -212,7 +213,7 @@ public class EntityFatCat extends EntityTameable {
 	
 	@Override
 	public EntityFatCat createChild(EntityAgeable p_90011_1_) {
-		EntityFatCat cat = new EntityFatCat(this.worldObj);
+		EntityFatCat cat = new EntityFatCat(this.getEntityWorld());
 		// setOwnerId
 		cat.setOwnerId(this.getOwner().getUniqueID());
 		return cat;
@@ -249,7 +250,7 @@ public class EntityFatCat extends EntityTameable {
 		if ((this.ticksExisted % (HOUR_TICK*(24+12)/HUNGER_MAX)) == 0) {
 			this.setHunger(getHunger()-1,StatusChangeReason.Tick);
 			if (this.getHunger() == 0)
-				this.attackEntityFrom(DamageSource.starve, getMaxHealth()*0.25f);
+				this.attackEntityFrom(DamageSource.STARVE, getMaxHealth()*0.25f);
 			// 腹が減っていると友好度down,重さdown
 			if (isHungry()) {
 				setFriendship(getFriendship()-1, StatusChangeReason.Hungry);
@@ -265,14 +266,14 @@ public class EntityFatCat extends EntityTameable {
 			Entity owner = getOwner();
 			if (owner != null) {
 				// 離れていると丸2日で友好度が0になる
-				float distance = getDistanceToEntity(owner);
+				float distance = getDistance(owner);
 				if (distance > 16.0F) {
 					setFriendship(getFriendship()-(FRIENDSHIP_MAX/42),StatusChangeReason.AwayFromOwner);
 				}
 			}
 			
 			// 近くにいるネコに恋愛度が上がる(20日でMAX）
-			EntityFatCat entity = (EntityFatCat) this.worldObj.findNearestEntityWithinAABB(EntityFatCat.class, getEntityBoundingBox().expand(8.0D, 8.0D, 8.0D), this);
+			EntityFatCat entity = (EntityFatCat) this.getEntityWorld().findNearestEntityWithinAABB(EntityFatCat.class, getEntityBoundingBox().expand(8.0D, 8.0D, 8.0D), this);
         	if (entity != null) {
         		setLoveness(getLoveness()+(LOVENESS_MAX/(24*20)), StatusChangeReason.NearCat);
         	}
@@ -373,7 +374,7 @@ public class EntityFatCat extends EntityTameable {
      */
     protected SoundEvent getAmbientSound()
     {
-		if (!this.worldObj.isRemote) {
+		if (!this.getEntityWorld().isRemote) {
 			if (!isInSleep()) {
 				setFace(Face.Myau);
 			}
@@ -398,19 +399,18 @@ public class EntityFatCat extends EntityTameable {
         return null;
     }
 
-	@Override
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
-    protected SoundEvent getHurtSound()
+    @Override
+    @Nullable
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-		setFace(Face.Myau);
+    	setFace(Face.Myau);
 		cancelPose();
 		/*
         return FatCatMod.MODID + ":hitt";
         */
 		return new SoundEvent(new ResourceLocation(FatCatMod.MODID, "hitt"));
     }
+    
 
 	@Override
     /**
@@ -428,7 +428,7 @@ public class EntityFatCat extends EntityTameable {
     }
     
 	public void eatEntityBounus(EntityItem food) {
-		Item item = food.getEntityItem().getItem();
+		Item item = food.getItem().getItem();
 		if (item != null) {
 			if (isFoodItem(item)) {
 				fatten(1, StatusChangeReason.Eat);
@@ -488,7 +488,7 @@ public class EntityFatCat extends EntityTameable {
 		table.setInteger("Friendship", getFriendship());
 		table.setInteger("SkinType", getSkinType());
 		table.setInteger("Love", getLoveness());
-		FatCatMod.proxy.log(this.worldObj, "writeEntityToNBT: %s", table.toString());
+		FatCatMod.proxy.log(this.getEntityWorld(), "writeEntityToNBT: %s", table.toString());
 	}
 	
 	@Override
@@ -504,7 +504,7 @@ public class EntityFatCat extends EntityTameable {
 
 		this.setCatScale();
 
-		FatCatMod.proxy.log(this.worldObj, "readEntityToNBT: %s", table.toString());
+		FatCatMod.proxy.log(this.getEntityWorld(), "readEntityToNBT: %s", table.toString());
 	}
 	
 	public int getWeight() {
@@ -516,7 +516,7 @@ public class EntityFatCat extends EntityTameable {
 			return;
 		}
 
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setWeignt=%d", reason.name(), weight);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setWeignt=%d", reason.name(), weight);
 		this.dataManager.set(WEIGHT_DATA_INDEX, weight);
 	}
 	
@@ -537,7 +537,7 @@ public class EntityFatCat extends EntityTameable {
 			hunger = 0;
 		}
 		
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setHunger=%d", reason.name(), hunger);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setHunger=%d", reason.name(), hunger);
 		this.dataManager.set(HUNGER_DATA_INDEX, hunger);
 	}
 	
@@ -569,7 +569,7 @@ public class EntityFatCat extends EntityTameable {
 
 		// 便意MAX以上だとダメージ
 		if (bladder > 100) {
-			attackEntityFrom(DamageSource.generic, 2.0F);
+			attackEntityFrom(DamageSource.GENERIC, 2.0F);
 			bladder = 100;
 		}
 		if (bladder < 0) {
@@ -580,7 +580,7 @@ public class EntityFatCat extends EntityTameable {
 		if (bladder > 50) {
 			aiUnko.tryExec = true;
 		}
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setBladder=%d", reason.name(), bladder);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setBladder=%d", reason.name(), bladder);
 		this.dataManager.set(BLADDER_DATA_INDEX, bladder);
 	}
 
@@ -601,7 +601,7 @@ public class EntityFatCat extends EntityTameable {
 		if (tiredness < 0) {
 			tiredness = 0;
 		}
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setTiredness=%d", reason.name(), tiredness);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setTiredness=%d", reason.name(), tiredness);
 		this.dataManager.set(TIREDNESS_DATA_INDEX, tiredness);
 	}
 	
@@ -621,7 +621,7 @@ public class EntityFatCat extends EntityTameable {
 		if (friendship < 0) {
 			friendship = 0;
 		}
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setFriendship=%d", reason.name(), friendship);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setFriendship=%d", reason.name(), friendship);
 		this.dataManager.set(FRIENDSHIP_DATA_INDEX, friendship);
 	}
 	
@@ -657,20 +657,20 @@ public class EntityFatCat extends EntityTameable {
 		if (loveness < 0) {
 			loveness = 0;
 		}
-		FatCatMod.proxy.log(this.worldObj, "reason=%s, setLoveness=%d", reason.name(), loveness);
+		FatCatMod.proxy.log(this.getEntityWorld(), "reason=%s, setLoveness=%d", reason.name(), loveness);
 		this.dataManager.set(LOVENESS_DATA_INDEX, loveness);
 	}
 
 //	public boolean interact(EntityPlayer player) {
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)
+	public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
 		ItemStack itemstack = player.inventory.getCurrentItem();
-        if (super.processInteract(player, hand, itemstack)) {
+        if (super.processInteract(player, hand)) {
         	return true;
         }
         else if (itemstack != null) {
-        	if (itemstack.getItem() == FatCatMod.brush && !isInSleep()) {
+        	if (itemstack.getItem() == FcmItems.brush && !isInSleep()) {
         		brush(player, itemstack);
         		return false;
         	}
@@ -702,7 +702,7 @@ public class EntityFatCat extends EntityTameable {
 	 * 魚: friendly+
 	 */
 	private boolean debugInteract(EntityPlayer player, ItemStack itemstack) {
-		if (this.worldObj.isRemote) {
+		if (this.getEntityWorld().isRemote) {
 			return false;
 		}
 		if (FatCatMod.DEBUG) {
@@ -738,7 +738,7 @@ public class EntityFatCat extends EntityTameable {
 				setFriendship(getFriendship()-500, StatusChangeReason.Debug);
 				this.generateRandomParticles(EnumParticleTypes.VILLAGER_ANGRY);
 				return true;
-			} else if (itemstack.getItem() == FatCatMod.unko) {
+			} else if (itemstack.getItem() == FcmItems.unko) {
 				setBladder(getBladder()+BLADDER_MAX/5, StatusChangeReason.Debug);
 				return true;
 			} 
@@ -750,19 +750,16 @@ public class EntityFatCat extends EntityTameable {
 
 	// ブラシをかける
 	private void brush(EntityPlayer player, ItemStack itemstack) {
+		
 		itemstack.damageItem(1, player);
-		if (itemstack.stackSize <= 0)
-		{
-			//player.destroyCurrentEquippedItem();
-			player.inventory.mainInventory[player.inventory.currentItem] = null;
-		}
+		
 		setPose(Pose.Brushing);
 		if (getRNG().nextInt(10) == 0) {
 			setFriendship(getFriendship()+FRIENDSHIP_MAX/10, StatusChangeReason.Brushing);
 			setTiredness(getTiredness()-TIREDNESS_MAX/20, StatusChangeReason.Brushing);
 			generateRandomParticles(EnumParticleTypes.HEART);
-			if (!worldObj.isRemote && getRNG().nextInt(6) == 0) {
-				dropItem(FatCatMod.furball, 1);
+			if (!this.getEntityWorld().isRemote && getRNG().nextInt(6) == 0) {
+				dropItem(FcmItems.furball, 1);
 			}
 		}
 		else if (getRNG().nextInt(100) == 50) {
@@ -773,9 +770,9 @@ public class EntityFatCat extends EntityTameable {
 	}
 
 	private void openGui(EntityPlayer player) {
-		if (!this.worldObj.isRemote)
+		if (!this.getEntityWorld().isRemote)
         {
-			player.openGui(FatCatMod.instance, FatCatMod.STATUS_GUI_ID, this.worldObj, 	(int)this.posX, (int)this.posY, (int)this.posZ);
+			player.openGui(FatCatMod.instance, FatCatMod.STATUS_GUI_ID, this.getEntityWorld(), 	(int)this.posX, (int)this.posY, (int)this.posZ);
         }
 		
 	}
@@ -812,8 +809,8 @@ public class EntityFatCat extends EntityTameable {
 	}
 	
 	public void doUnko() {
-		if (!this.worldObj.isRemote) {
-			EntityItem entityitem = new EntityItemUnko(this.worldObj, this.posX, this.posY - 0.3D, this.posZ, new ItemStack(FatCatMod.unko, (getBladder()/20)));
+		if (!this.getEntityWorld().isRemote) {
+			EntityItem entityitem = new EntityItemUnko(this.getEntityWorld(), this.posX, this.posY - 0.3D, this.posZ, new ItemStack(FcmItems.unko, (getBladder()/20)));
 			entityitem.setThrower(this.getCommandSenderEntity().getName());
 
 			float f = 0.3F;
@@ -821,9 +818,9 @@ public class EntityFatCat extends EntityTameable {
 			entityitem.motionZ = (double)(-MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
 			entityitem.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
 
-			worldObj.spawnEntityInWorld(entityitem);
+			this.getEntityWorld().spawnEntity(entityitem);
 			//worldObj.playSoundEffect(posX, posY, posZ, FatCatMod.MODID + ":unko", 3.0F, 12.0f);
-			worldObj.playSound(null, new BlockPos(posX, posY, posZ), new SoundEvent(new ResourceLocation(FatCatMod.MODID, "unko")), null, 3.0F, 12.0f);
+			this.getEntityWorld().playSound(null, new BlockPos(posX, posY, posZ), new SoundEvent(new ResourceLocation(FatCatMod.MODID, "unko")), null, 3.0F, 12.0f);
 		}
 		setBladder(0, StatusChangeReason.Unkoed);
 	}
@@ -858,10 +855,12 @@ public class EntityFatCat extends EntityTameable {
     protected void updateLeashedState() {
     	super.updateLeashedState();
         
-        if (this.getLeashed() && this.getLeashedToEntity() != null && this.getLeashedToEntity().worldObj == this.worldObj)
+        if (this.getLeashed() 
+        		&& this.getLeashHolder() != null 
+        		&& this.getLeashHolder().getEntityWorld() == this.getEntityWorld())
         {
-			Entity owner = this.getLeashedToEntity();
-            float distance = this.getDistanceToEntity(owner);
+			Entity owner = this.getLeashHolder();
+            float distance = this.getDistance(owner);
             
             if (!isInSleep()) {
             	this.setAISit(false);

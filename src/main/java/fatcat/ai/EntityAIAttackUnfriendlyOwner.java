@@ -46,7 +46,7 @@ public class EntityAIAttackUnfriendlyOwner extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return (!cat.getOwner().isDead && tick < giveup);
 	}
 	
@@ -60,7 +60,7 @@ public class EntityAIAttackUnfriendlyOwner extends EntityAIBase {
 				}
 			}
 		}
-        if (this.cat.getDistanceSqToEntity(owner) < 1.0D) {
+        if (this.cat.getDistanceSq(owner) < 1.0D) {
             this.cat.attackEntityAsMob(owner);
         	tick = giveup+1;
         }

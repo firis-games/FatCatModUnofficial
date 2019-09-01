@@ -15,36 +15,42 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fatcat.gui.GuiStatusHandler;
+import fatcat.model.RenderFatCat;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = FatCatMod.MODID, version = FatCatMod.VERSION)
+@EventBusSubscriber
 public class FatCatMod {
     public static final String MODID = "fatcat";
     public static final String VERSION = "1.0.3";
 	public static final int STATUS_GUI_ID = 0;
-    public static Item egg;
-    public static Item unko;
-    public static Item brush;
-    public static Item furball;
-    public static Item feather_toy;
 
     /* デバッグモード */
 	public static boolean DEBUG = true;
@@ -66,10 +72,10 @@ public class FatCatMod {
 	public Map<Integer, String> skinMap;
 	public List<Integer> skinTypes;
 
-    @SuppressWarnings("deprecation")
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+    	/*
     	egg = new ItemFatCatEgg().setUnlocalizedName("fatcat_egg");
     	unko = new ItemFatCatUnko().setUnlocalizedName("fatcat_unko");
     	brush = new ItemCatBrush().setUnlocalizedName("fatcat_brush");
@@ -82,11 +88,18 @@ public class FatCatMod {
     	GameRegistry.registerItem(brush, brush.getUnlocalizedName().substring(5));
     	GameRegistry.registerItem(furball, furball.getUnlocalizedName().substring(5));
     	GameRegistry.registerItem(feather_toy, feather_toy.getUnlocalizedName().substring(5));
+    	*/
     	
     	//Entity登録
-    	EntityRegistry.registerModEntity(EntityFatCat.class, "FatCat", ++modEntityIndex, this, 64, 10, true);
-    	EntityRegistry.registerModEntity(EntityItemUnko.class, "FatCatUnko", ++modEntityIndex, this, 64, 10, true);
+    	EntityRegistry.registerModEntity(new ResourceLocation(FatCatMod.MODID, "fatcat"),
+    			EntityFatCat.class,
+    			"fatcat", ++modEntityIndex, this, 64, 10, true);
 
+    	EntityRegistry.registerModEntity(new ResourceLocation(FatCatMod.MODID, "fatcat_unko"),
+    			EntityFatCat.class,
+    			"fatcat_unko", ++modEntityIndex, this, 64, 10, true);
+    	
+    	/*
     	//レシピ追加
     	GameRegistry.addRecipe(
     			new ItemStack(brush, 1),
@@ -96,6 +109,7 @@ public class FatCatMod {
     			new ItemStack(feather_toy, 1),
     			" F ", " F ", " T ",
     			'F', furball, 'T', Items.STICK);
+    	*/
     	
     	//チェストへアイテムを追加
     	/*
@@ -105,11 +119,13 @@ public class FatCatMod {
     	ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 15));
     	ChestGenHooks.addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 7));
     	*/
+    	/*
     	//チェスト方式からクラフト方式へ変更
     	GameRegistry.addRecipe(
     			new ItemStack(egg, 1),
     			" F ", "BEB", " F ",
     			'E', Items.EGG, 'F', Items.FISH, 'B', Items.EMERALD);
+		*/
     	
     	Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 
@@ -214,10 +230,92 @@ public class FatCatMod {
     public static final CreativeTabs FatCatModTab = new CreativeTabs("tabFatCat") {
     	@SideOnly(Side.CLIENT)
     	@Override
-        public Item getTabIconItem()
+        public ItemStack getTabIconItem()
         {
-            return FatCatMod.egg;
+            return new ItemStack(FcmItems.egg);
         }
-};
+    };
+    
+    /**
+     * アイテムインスタンス保持用
+     * アイテムIDを旧式にあわせて設定するため@ObjectHolderにて設定
+     */
+    @ObjectHolder(FatCatMod.MODID)
+    public static class FcmItems {
+    	
+    	@ObjectHolder("fatcat_egg")
+        public final static Item egg = null;
+
+    	@ObjectHolder("fatcat_unko")
+        public final static Item unko = null;
+    	
+    	@ObjectHolder("fatcat_brush")
+        public final static Item brush = null;
+    	
+    	@ObjectHolder("fatcat_furball")
+        public final static Item furball = null;
+    	
+    	@ObjectHolder("fatcat_feather_toy")
+        public final static Item feather_toy = null;
+    }
+    
+    /**
+     * アイテム登録
+     * @param event
+     */
+    @SubscribeEvent
+    protected static void registerItems(RegistryEvent.Register<Item> event)
+    {
+    	event.getRegistry().register(new ItemFatCatEgg()
+    			.setRegistryName("fatcat_egg")
+    			.setUnlocalizedName("fatcat_egg"));
+    	
+    	event.getRegistry().register(new ItemFatCatUnko()
+    			.setRegistryName("fatcat_unko")
+    			.setUnlocalizedName("fatcat_unko"));
+    	
+    	event.getRegistry().register(new ItemCatBrush()
+    			.setRegistryName("fatcat_brush")
+    			.setUnlocalizedName("fatcat_brush"));
+    	
+    	event.getRegistry().register(new ItemFeatherToy()
+    			.setRegistryName("fatcat_feather_toy")
+    			.setUnlocalizedName("fatcat_feather_toy"));
+    	
+    	event.getRegistry().register(new ItemFurball()
+    			.setRegistryName("fatcat_furball")
+    			.setUnlocalizedName("fatcat_furball"));
+    }
+    
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    protected static void registerModels(ModelRegistryEvent event)
+    {
+    	//アイテムモデルの設定
+    	ModelLoader.setCustomModelResourceLocation(FcmItems.egg, 0,
+    			new ModelResourceLocation(FcmItems.egg.getRegistryName(), "inventory"));
+    	
+		ModelLoader.setCustomModelResourceLocation(FcmItems.unko, 0,
+    			new ModelResourceLocation(FcmItems.unko.getRegistryName(), "inventory"));
+		
+    	ModelLoader.setCustomModelResourceLocation(FcmItems.brush, 0,
+    			new ModelResourceLocation(FcmItems.brush.getRegistryName(), "inventory"));
+    	
+    	ModelLoader.setCustomModelResourceLocation(FcmItems.furball, 0,
+    			new ModelResourceLocation(FcmItems.furball.getRegistryName(), "inventory"));
+    	
+    	ModelLoader.setCustomModelResourceLocation(FcmItems.feather_toy, 0,
+    			new ModelResourceLocation(FcmItems.feather_toy.getRegistryName(), "inventory"));
+    	
+    	//Entityモデルの設定
+    	RenderingRegistry.registerEntityRenderingHandler(
+    			EntityFatCat.class, new IRenderFactory<EntityFatCat>() {
+				@Override
+				public Render<? super EntityFatCat> createRenderFor(RenderManager manager) {
+					return new RenderFatCat(manager);
+				}
+    	});
+    	
+    }
 
 }

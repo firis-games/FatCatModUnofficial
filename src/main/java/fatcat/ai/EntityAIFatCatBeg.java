@@ -17,7 +17,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
 
 	public EntityAIFatCatBeg(EntityFatCat cat, float distance) {
 		this.cat = cat;
-        this.worldObject = cat.worldObj;
+        this.worldObject = cat.getEntityWorld();
         this.minPlayerDistance = distance;
         this.setMutexBits(13);
 	}
@@ -45,7 +45,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
     public boolean continueExecuting()
     {
     	if (this.thePlayer.isEntityAlive()) {
-    		if ((this.cat.getDistanceSqToEntity(this.thePlayer) > (double)(this.minPlayerDistance * this.minPlayerDistance))) {
+    		if ((this.cat.getDistanceSq(this.thePlayer) > (double)(this.minPlayerDistance * this.minPlayerDistance))) {
     			return false;
     		}
     		else {

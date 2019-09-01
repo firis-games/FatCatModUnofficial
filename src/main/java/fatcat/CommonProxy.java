@@ -2,7 +2,6 @@ package fatcat;
 
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 
 public class CommonProxy {
 
@@ -14,7 +13,7 @@ public class CommonProxy {
 	public void log(World world, String fmt, Object ... data) {
 		if (FatCatMod.logging) {
 			fmt = "[FatCatMOD]worldTime=" + world.getWorldTime() + ", " + fmt;
-			FMLLog.info(fmt, data);
+			//FMLLog.info(fmt, data);
 		}
 	}
 }

@@ -45,15 +45,15 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 			return false;
 		}
 		else {
-			this.closestItem = (EntityItem)this.cat.worldObj.findNearestEntityWithinAABB(EntityItem.class, this.cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D), this.cat);
+			this.closestItem = (EntityItem)this.cat.getEntityWorld().findNearestEntityWithinAABB(EntityItem.class, this.cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D), this.cat);
 
 			boolean res = false;
 			if (this.closestItem != null)  {
-				Item food = this.closestItem.getEntityItem().getItem();
+				Item food = this.closestItem.getItem().getItem();
 				res = isFindableItem(food);
 				// 食べ物以外は餓死寸前の状態だと食べてしまう
 				if (res && !cat.isFoodItem(food)) {
-					FatCatMod.proxy.log(this.cat.worldObj, "EntityAIEatEntityItem: shouldExecute() -> non food(%s), starved(%s)", food.toString(), cat.isStarved());
+					FatCatMod.proxy.log(this.cat.getEntityWorld(), "EntityAIEatEntityItem: shouldExecute() -> non food(%s), starved(%s)", food.toString(), cat.isStarved());
 					res = this.cat.isStarved();
 				}
 			}
@@ -65,7 +65,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
 	@Override
-    public boolean continueExecuting()
+    public boolean shouldContinueExecuting()
     {
         if (this.closestItem.isEntityAlive() && this.giveuptime > 0) {
         	return true;
@@ -141,15 +141,15 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     	FatCatMod.proxy.spawnParticle(
     			EnumParticleTypes.ITEM_CRACK, food.posX, food.posY+0.5, food.posZ,
     			this.cat.getRNG().nextGaussian() * 0.15D, this.cat.getRNG().nextDouble() * 0.2D, this.cat.getRNG().nextGaussian() * 0.15D, 10,
-    			new int[] {Item.getIdFromItem(food.getEntityItem().getItem())});
+    			new int[] {Item.getIdFromItem(food.getItem().getItem())});
     	
     	//ご飯を食べる音
-    	cat.worldObj.playSound((EntityPlayer)null, new BlockPos(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D), 
+    	cat.getEntityWorld().playSound((EntityPlayer)null, new BlockPos(cat.posX+0.5D, cat.posY+0.5D, cat.posZ+0.5D), 
     			SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     	    	
     	// もしPlayerが取っても加算されないようにする
-    	if (food.getEntityItem() != null) {
-    		food.getEntityItem().stackSize = 0;
+    	if (food.getItem() != null) {
+    		food.getItem().setCount(0);
     	}
     	food.setDead();
     }
@@ -162,7 +162,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     
     private boolean isCollideEntityItem(EntityFatCat cat, Entity item) {
     	AxisAlignedBB axisalignedbb = cat.getEntityBoundingBox().expand(1.0D, 1.0D, 1.0D);
-    	List<Entity> list = cat.worldObj.getEntitiesWithinAABBExcludingEntity(cat, axisalignedbb);
+    	List<Entity> list = cat.getEntityWorld().getEntitiesWithinAABBExcludingEntity(cat, axisalignedbb);
     	return list.contains(item);
     }
 }

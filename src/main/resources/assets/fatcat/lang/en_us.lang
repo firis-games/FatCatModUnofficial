@@ -1,8 +1,11 @@
+itemGroup.tabFatCat=FatCatMod
+
 item.fatcat_egg.name=FatCat Egg
 item.fatcat_unko.name=FatCat Unko
 item.fatcat_brush.name=FatCat Brush
-item.furball.name=Furball
+item.fatcat_furball.name=Furball
 item.fatcat_feather_toy.name=Feather Toy
+
 fatcat.gui.status.noname=No Name
 fatcat.gui.status.weight=Weight
 fatcat.gui.status.hunger=Hunger
@@ -11,5 +14,5 @@ fatcat.gui.status.health=HP
 fatcat.gui.status.tiredness=Tiredness
 fatcat.gui.status.friendship=Friendship
 fatcat.gui.status.loveness=Loveness
-itemGroup.tabFatCat=FatCatMod
+
 entity.fatcat.FatCat.name=FatCat

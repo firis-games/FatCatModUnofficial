@@ -17,7 +17,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
     
     public EntityAIFatCatMate(EntityFatCat cat) {
     	this.cat = cat;
-        this.worldObj = cat.worldObj;
+        this.worldObj = cat.getEntityWorld();
         this.setMutexBits(14);
 	}
  
@@ -77,7 +77,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
     }
 	
 	@Override
-    public boolean continueExecuting()
+    public boolean shouldContinueExecuting()
     {
         return this.matingTimeout >= 0 && cat.isMating && checkSufficientMating(cat) && checkSufficientMating(mate);
     }
@@ -97,7 +97,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
         //ねこのサイズで近くの判定がうまくいかない
         //からだの大きさを考慮してサイズで判定してみる
         //if (this.cat.getDistanceSqToEntity(this.mate) > 2.25D)
-       	if (this.cat.getDistanceSqToEntity(this.mate) > this.mate.width*2 + this.cat.width*2)
+       	if (this.cat.getDistanceSq(this.mate) > this.mate.width*2 + this.cat.width*2)
         {
             this.cat.getNavigator().tryMoveToEntityLiving(this.mate, 0.25D);
         }
@@ -118,7 +118,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
 //    	System.out.println("EntityAIFatCatMate(shouldExecute): getBirth");
         EntityFatCat child = this.cat.createChild(this.mate);
         child.setLocationAndAngles(this.cat.posX, this.cat.posY, this.cat.posZ, 0.0F, 0.0F);
-        worldObj.spawnEntityInWorld(child);
+        worldObj.spawnEntity(child);
         cat.setLoveness(0, StatusChangeReason.Spawn);
         mate.setLoveness(0, StatusChangeReason.Spawn);
     }

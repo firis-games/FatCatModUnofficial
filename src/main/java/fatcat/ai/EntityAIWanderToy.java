@@ -1,7 +1,7 @@
 package fatcat.ai;
 
 import fatcat.EntityFatCat;
-import fatcat.FatCatMod;
+import fatcat.FatCatMod.FcmItems;
 import fatcat.ItemFeatherToy;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +24,7 @@ public class EntityAIWanderToy extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		this.thePlayer = cat.worldObj.getClosestPlayerToEntity(this.cat, (double) this.minPlayerDistance);
+		this.thePlayer = cat.getEntityWorld().getClosestPlayerToEntity(this.cat, (double) this.minPlayerDistance);
 		if (thePlayer == null) {
 			return false;
 		} else if (this.cat.isInSleep() || this.cat.getLeashed() || this.cat.getOwner() == null) {
@@ -50,7 +50,7 @@ public class EntityAIWanderToy extends EntityAIBase {
 	}
 
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 		return (!cat.getOwner().isDead && hasFeatherToy(thePlayer));
 	}
 
@@ -71,7 +71,7 @@ public class EntityAIWanderToy extends EntityAIBase {
 			}
 			moving = true;
 		}
-		if (cat.getDistanceSqToEntity(thePlayer) < 0.2D
+		if (cat.getDistanceSq(thePlayer) < 0.2D
 				&& tick > nextDamageTick && moving) {
 			damageFeatherToy(cat, thePlayer);
 			nextDamageTick = tick + 20;
@@ -88,7 +88,7 @@ public class EntityAIWanderToy extends EntityAIBase {
 		if (itemstack == null) {
 			return false;
 		}
-		return itemstack.getItem() == FatCatMod.feather_toy;
+		return itemstack.getItem() == FcmItems.feather_toy;
 	}
 
 	private void damageFeatherToy(EntityFatCat cat, EntityPlayer player) {
@@ -97,10 +97,5 @@ public class EntityAIWanderToy extends EntityAIBase {
 			return;
 		}
 		itemstack.damageItem(ItemFeatherToy.MAX_DAMAGE / 3 + 1, cat);
-		if (itemstack.stackSize <= 0)
-		{
-			//手持ちアイテムを消去
-			player.inventory.mainInventory[player.inventory.currentItem] = null;
-		}
 	}
 }

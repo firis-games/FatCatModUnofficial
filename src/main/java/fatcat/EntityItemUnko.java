@@ -33,7 +33,7 @@ public class EntityItemUnko extends EntityItem {
 		
 		// 近くにホカホカのウンコがあると友好度down・疲労度up
 		if (this.ticksExisted % 20 == 0) {
-			Iterator<EntityFatCat> it = worldObj.getEntitiesWithinAABB(EntityFatCat.class, getEntityBoundingBox().expand(8.0D, 8.0D, 8.0D)).iterator();
+			Iterator<EntityFatCat> it = this.getEntityWorld().getEntitiesWithinAABB(EntityFatCat.class, getEntityBoundingBox().expand(8.0D, 8.0D, 8.0D)).iterator();
 			while(it.hasNext()) {
 				EntityFatCat cat = (EntityFatCat) it.next();
 				cat.setFriendship(cat.getFriendship()-10, EntityFatCat.StatusChangeReason.NearUnko);

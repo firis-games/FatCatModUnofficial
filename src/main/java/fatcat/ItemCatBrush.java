@@ -18,13 +18,13 @@ public class ItemCatBrush extends Item {
         this.setCreativeTab(FatCatMod.FatCatModTab);
 	}
 
-	/**
+    /**
      * Called when the equipped item is right clicked.
      */
 	@Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
-		player.swingArm(hand);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+		playerIn.swingArm(handIn);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
 }

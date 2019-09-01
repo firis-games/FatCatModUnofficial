@@ -1,17 +1,14 @@
 package fatcat;
 
-import fatcat.model.RenderFatCat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy {
+	
 	@Override
 	public void registerRenderers() {
-        registerEntityRenderers();
-    	registerItemRenderers();
+        //registerEntityRenderers();
+    	//registerItemRenderers();
 	}
 	
 	@Override
@@ -28,19 +25,20 @@ public class ClientProxy extends CommonProxy {
         }
 	}
 	
+	/* ModelRegistryEventで登録を行う
 	@SuppressWarnings("deprecation")
 	private void registerEntityRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFatCat.class, new RenderFatCat(Minecraft.getMinecraft().getRenderManager()));
 	}
 	
-	
 	private void registerItemRenderers() {
 		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
-		renderItem.getItemModelMesher().register(FatCatMod.egg, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FatCatMod.egg.getUnlocalizedName().substring(5), "inventory"));
-		renderItem.getItemModelMesher().register(FatCatMod.unko, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FatCatMod.unko.getUnlocalizedName().substring(5), "inventory"));
-		renderItem.getItemModelMesher().register(FatCatMod.brush, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FatCatMod.brush.getUnlocalizedName().substring(5), "inventory"));
-		renderItem.getItemModelMesher().register(FatCatMod.furball, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FatCatMod.furball.getUnlocalizedName().substring(5), "inventory"));
-		renderItem.getItemModelMesher().register(FatCatMod.feather_toy, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FatCatMod.feather_toy.getUnlocalizedName().substring(5), "inventory"));
+		renderItem.getItemModelMesher().register(FcmItems.egg, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FcmItems.egg.getUnlocalizedName().substring(5), "inventory"));
+		renderItem.getItemModelMesher().register(FcmItems.unko, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FcmItems.unko.getUnlocalizedName().substring(5), "inventory"));
+		renderItem.getItemModelMesher().register(FcmItems.brush, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FcmItems.brush.getUnlocalizedName().substring(5), "inventory"));
+		renderItem.getItemModelMesher().register(FcmItems.furball, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FcmItems.furball.getUnlocalizedName().substring(5), "inventory"));
+		renderItem.getItemModelMesher().register(FcmItems.feather_toy, 0, new ModelResourceLocation(FatCatMod.MODID + ":" + FcmItems.feather_toy.getUnlocalizedName().substring(5), "inventory"));
 	}
+	*/
 }

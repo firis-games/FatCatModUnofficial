@@ -52,7 +52,7 @@ public class RenderFatCat extends RenderLiving<EntityFatCat> {
 	 * Sent rotation of body
 	 * @see net.minecraft.client.renderer.entity.RendererLivingEntity#rotateCorpse(net.minecraft.entity.EntityLivingBase, float, float, float)
 	 */
-    protected void rotateCorpse(EntityFatCat entity, float p_77043_2_, float p_77043_3_, float p_77043_4_)
+    protected void applyRotations(EntityFatCat entity, float p_77043_2_, float p_77043_3_, float p_77043_4_)
     {
 		EntityFatCat cat = (EntityFatCat)entity;
 
@@ -62,7 +62,7 @@ public class RenderFatCat extends RenderLiving<EntityFatCat> {
         }
         else
         {
-            super.rotateCorpse(cat, p_77043_2_, p_77043_3_, p_77043_4_);
+            super.applyRotations(cat, p_77043_2_, p_77043_3_, p_77043_4_);
         }
     }
 

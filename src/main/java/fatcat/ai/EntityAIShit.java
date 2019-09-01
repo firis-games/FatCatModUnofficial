@@ -20,7 +20,7 @@ public class EntityAIShit extends EntityAIBase {
 
 	public EntityAIShit(EntityFatCat cat) {
 		this.cat = cat;
-		this.world = cat.worldObj;
+		this.world = cat.getEntityWorld();
         this.setMutexBits(18);
 	}
 
@@ -48,7 +48,7 @@ public class EntityAIShit extends EntityAIBase {
 	}
 	
 	@Override
-	public boolean continueExecuting() {
+	public boolean shouldContinueExecuting() {
 //		System.out.println("EntityAIShit: giveuptime:"+(giveuptime > 0)+",checkBlock:"+(checkBlock(closestPos)));
 		if (unkoCountDown > 0 || (giveuptime > 0 && checkBlock(closestPos))) {
 			return true;
@@ -74,7 +74,7 @@ public class EntityAIShit extends EntityAIBase {
 		cat.setAISit(false);
 		this.cat.cancelPose();
 		
-		//this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord, this.closestPos.yCoord + 1, this.closestPos.zCoord, 1.0F);
+		//this.cat.getNavigator().tryMoveToXYZ(this.closestPos.x, this.closestPos.y + 1, this.closestPos.z, 1.0F);
         
 		
 	}
@@ -91,11 +91,11 @@ public class EntityAIShit extends EntityAIBase {
 			return;
 		}
 		
-        this.cat.getLookHelper().setLookPosition(this.closestPos.xCoord+0.5D, this.closestPos.yCoord, this.closestPos.zCoord+0.5D, 10.0F, (float)this.cat.getVerticalFaceSpeed());
+        this.cat.getLookHelper().setLookPosition(this.closestPos.x+0.5D, this.closestPos.y, this.closestPos.z+0.5D, 10.0F, (float)this.cat.getVerticalFaceSpeed());
         if ((this.giveuptime % 10) == 0) {
-        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.xCoord+0.5D, this.closestPos.yCoord+1, this.closestPos.zCoord+0.5D, 0.3f);
+        	this.cat.getNavigator().tryMoveToXYZ(this.closestPos.x+0.5D, this.closestPos.y+1, this.closestPos.z+0.5D, 0.3f);
         }
-//        System.out.println("EntityAIShit distance: " + this.closestPos.toString() + ", distance=" + cat.getDistance(closestPos.xCoord, closestPos.yCoord, closestPos.zCoord));
+//        System.out.println("EntityAIShit distance: " + this.closestPos.toString() + ", distance=" + cat.getDistance(closestPos.x, closestPos.y, closestPos.z));
         if (cat.getDistanceSqToCenter(new BlockPos(closestPos).up()) < 1.0D) {
         	unkoCountDown = 60;
 			giveuptime = 0;
@@ -110,11 +110,11 @@ public class EntityAIShit extends EntityAIBase {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					Vec3d pos = new Vec3d(MathHelper.floor_double(cat.posX+x-8), MathHelper.floor_double(cat.posY+y-1), MathHelper.floor_double(cat.posZ+z-8));
+					Vec3d pos = new Vec3d(MathHelper.floor(cat.posX+x-8), MathHelper.floor(cat.posY+y-1), MathHelper.floor(cat.posZ+z-8));
 					Vec3d catPos = new Vec3d(cat.posX,cat.posY, cat.posZ);
-					double d = cat.getDistance(pos.xCoord, pos.yCoord, pos.zCoord);
+					double d = cat.getDistance(pos.x, pos.y, pos.z);
 					if (checkBlock(pos) && (d < closestPosDistance)) {
-						FatCatMod.proxy.log(cat.worldObj, "EntityAIShit: found=<%s>, cat=<%s>", pos, catPos);
+						FatCatMod.proxy.log(cat.getEntityWorld(), "EntityAIShit: found=<%s>, cat=<%s>", pos, catPos);
 						this.closestPos = pos;
 						closestPosDistance = d;
 					}
@@ -127,7 +127,7 @@ public class EntityAIShit extends EntityAIBase {
 	}
 
     private boolean checkBlock(Vec3d pos) throws RuntimeException {
-    	BlockPos blockPos = new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
+    	BlockPos blockPos = new BlockPos(pos.x, pos.y, pos.z);
     	Block block = world.getBlockState(blockPos).getBlock();
     	if (block == null || pos == null) {
     		return false;
