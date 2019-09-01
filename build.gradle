@@ -17,9 +17,9 @@ repositories {
     }
 }
 
-version = "1.0.3.uo.mc1.10.2"
+version = "1.0.3.a"
 group= "fatcat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "FatCatMod-Unofficial"
+archivesBaseName = "FatCatMod-mc1.12.2uo"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
