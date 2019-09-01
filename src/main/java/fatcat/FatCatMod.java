@@ -19,7 +19,6 @@ import fatcat.model.RenderFatCat;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -158,7 +157,7 @@ public class FatCatMod {
     private void initSkinMap() {
 		skinMap = new HashMap<Integer, String>();
 		ArrayList<String> files = new ArrayList<String>();
-		URL path = DefaultResourcePack.class.getResource("/assets/fatcat/textures/models/cat/");
+		URL path = FatCatMod.class.getResource("/assets/fatcat/textures/models/cat/");
 		String protocol = path.getProtocol();
 		
 		if ("file".equals(protocol)) {

@@ -16,6 +16,7 @@ import fatcat.ai.EntityAIFatCatWander;
 import fatcat.ai.EntityAIShit;
 import fatcat.ai.EntityAIWanderToy;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -452,7 +453,8 @@ public class EntityFatCat extends EntityTameable {
 	}
 
 	public boolean isFoodItem(Item item) {
-		return item.getCreativeTab() != null && item.getCreativeTab().getTabLabel().equals("food");
+		return item.getCreativeTab() != null 
+				&& item.getCreativeTab() == CreativeTabs.FOOD;
 	}
 	
 	public void eatBlockBounus(Block block) {
@@ -893,7 +895,6 @@ public class EntityFatCat extends EntityTameable {
         }
     }
 
-    @SideOnly(Side.CLIENT)
     public void generateRandomParticles(EnumParticleTypes type)
     {
         for (int i = 0; i < 7; ++i)
