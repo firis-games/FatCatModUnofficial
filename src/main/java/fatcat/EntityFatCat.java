@@ -15,6 +15,7 @@ import fatcat.ai.EntityAIFatCatSleep;
 import fatcat.ai.EntityAIFatCatWander;
 import fatcat.ai.EntityAIShit;
 import fatcat.ai.EntityAIWanderToy;
+import fatcat.gui.GuiStatusHandler;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -780,6 +781,9 @@ public class EntityFatCat extends EntityTameable {
 		if (!this.getEntityWorld().isRemote)
         {
 			player.openGui(FatCatMod.instance, FatCatMod.STATUS_GUI_ID, this.getEntityWorld(), 	(int)this.posX, (int)this.posY, (int)this.posZ);
+        	GuiStatusHandler.serverCatList.put(player.getUniqueID(), this);
+        } else {
+        	GuiStatusHandler.clientCatList.put(player.getUniqueID(), this);
         }
 		
 	}
