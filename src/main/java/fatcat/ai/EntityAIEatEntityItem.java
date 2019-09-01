@@ -148,9 +148,9 @@ public class EntityAIEatEntityItem extends EntityAIBase {
     			SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     	    	
     	// もしPlayerが取っても加算されないようにする
-    	if (food.getItem() != null) {
-    		food.getItem().setCount(0);
-    	}
+    	//if (food.getItem() != null) {
+    	//	food.getItem().setCount(0);
+    	//}
     	food.setDead();
     }
     

@@ -428,9 +428,11 @@ public class EntityFatCat extends EntityTameable {
     }
     
 	public void eatEntityBounus(EntityItem food) {
-		Item item = food.getItem().getItem();
-		if (item != null) {
-			if (isFoodItem(item)) {
+		
+		ItemStack foodStack = food.getItem();
+		
+		if (!foodStack.isEmpty()) {
+			if (isFoodItem(foodStack.getItem())) {
 				fatten(1, StatusChangeReason.Eat);
 				this.heal(getMaxHealth()/6);
 				setBladder(getBladder()+10, StatusChangeReason.Eat);
@@ -665,11 +667,11 @@ public class EntityFatCat extends EntityTameable {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-		ItemStack itemstack = player.inventory.getCurrentItem();
+		ItemStack itemstack = player.getHeldItem(hand);
         if (super.processInteract(player, hand)) {
         	return true;
         }
-        else if (itemstack != null) {
+        else if (!itemstack.isEmpty()) {
         	if (itemstack.getItem() == FcmItems.brush && !isInSleep()) {
         		brush(player, itemstack);
         		return false;
