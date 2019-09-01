@@ -20,7 +20,7 @@ public class GuiStatus extends GuiContainer {
 		this.cat = cat;
 		//this.player = player;
 		this.xSize = 200;
-		this.ySize = 127;
+		this.ySize = 130;
         this.allowUserInput = false;
 	}
 
@@ -78,6 +78,16 @@ public class GuiStatus extends GuiContainer {
 //			System.out.println("drawIconBar(last):x="+(x+w*last)+",y="+y+",u="+iconX+",v="+iconY+",w="+rest);
 			this.drawTexturedModalRect(x+w*limit, y, iconX, iconY, rest, w);
 		}
+	}
+	
+	/**
+	 * 背景色黒とアイテムのツールチップを表示するために必要
+	 */
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 }
