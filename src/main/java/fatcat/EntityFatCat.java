@@ -667,23 +667,26 @@ public class EntityFatCat extends EntityTameable {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-		ItemStack itemstack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-        	return true;
-        }
-        else if (!itemstack.isEmpty()) {
-        	if (itemstack.getItem() == FcmItems.brush && !isInSleep()) {
-        		brush(player, itemstack);
-        		return false;
-        	}
-        	if (debugInteract(player, itemstack)) {
-        		return false;
-        	}
-        }
-        else {
-            openGui(player);
-    		return true;
-        }
+		//MainHandのみ判断対象とする
+		if (hand == EnumHand.MAIN_HAND) {
+			ItemStack itemstack = player.getHeldItem(hand);
+	        if (super.processInteract(player, hand)) {
+	        	return true;
+	        }
+	        else if (!itemstack.isEmpty()) {
+	        	if (itemstack.getItem() == FcmItems.brush && !isInSleep()) {
+	        		brush(player, itemstack);
+	        		return false;
+	        	}
+	        	if (debugInteract(player, itemstack)) {
+	        		return false;
+	        	}
+	        }
+	        else {
+	            openGui(player);
+	    		return true;
+	        }
+		}
         return false;
     }
 	
@@ -828,7 +831,9 @@ public class EntityFatCat extends EntityTameable {
 	}
 	
 	public void cancelPose() {
-		aiSleep.tryWakeup = true;
+		if (aiSleep != null) {
+			aiSleep.tryWakeup = true;
+		}
 		brushingTick = 0;
 		setPose(Pose.None);
 	}
