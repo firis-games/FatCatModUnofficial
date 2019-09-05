@@ -17,7 +17,7 @@ repositories {
     }
 }
 
-version = "1.0.3.a"
+version = "1.0.3.b"
 group= "fatcat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "FatCatMod-mc1.12.2uo"
 
