@@ -13,7 +13,7 @@ public class EntityAIFatCatSleep extends EntityAIBase {
 	public EntityAIFatCatSleep(EntityFatCat cat) {
 		this.cat = cat;
 		//this.world = cat.worldObj;
-		this.setMutexBits(21);
+		this.setMutexBits(16);
 	}
 
 	@Override

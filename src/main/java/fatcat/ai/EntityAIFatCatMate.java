@@ -4,6 +4,8 @@ import fatcat.EntityFatCat;
 import fatcat.EntityFatCat.StatusChangeReason;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /* 恋愛度が高ければ子供を作る */
@@ -18,7 +20,7 @@ public class EntityAIFatCatMate extends EntityAIBase {
     public EntityAIFatCatMate(EntityFatCat cat) {
     	this.cat = cat;
         this.worldObj = cat.getEntityWorld();
-        this.setMutexBits(14);
+        this.setMutexBits(15);
 	}
  
 	@Override
@@ -39,11 +41,15 @@ public class EntityAIFatCatMate extends EntityAIBase {
 
         if (exec || cat.tryMating)
         {
-        	EntityFatCat entity = (EntityFatCat) this.worldObj.findNearestEntityWithinAABB(EntityFatCat.class, cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D), this.cat);
+        	int range = 12;
+        	AxisAlignedBB area = new AxisAlignedBB(new BlockPos(this.cat.posX, this.cat.posY, this.cat.posZ));
+        	area = area.expand(-range, 0, -range).expand(range, 3.0D, range);
+        	
+        	EntityFatCat entity = (EntityFatCat) this.worldObj.findNearestEntityWithinAABB(EntityFatCat.class, area, this.cat);
 
         	exec = checkSufficientMating(mate);
        		this.mate = entity;
- 
+       		
 //       		System.out.println("EntityAIFatCatMate(shouldExecute): exec="+exec+",");
         }
         

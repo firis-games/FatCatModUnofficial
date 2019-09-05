@@ -33,7 +33,7 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 		//this.speed = speed;
 		this.giveuplimit = giveuplimit;
 		this.frequency = frequency;
-		this.setMutexBits(12);
+		this.setMutexBits(0);
 	}
 
 	@Override
@@ -45,7 +45,19 @@ public class EntityAIEatEntityItem extends EntityAIBase {
 			return false;
 		}
 		else {
-			this.closestItem = (EntityItem)this.cat.getEntityWorld().findNearestEntityWithinAABB(EntityItem.class, this.cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D), this.cat);
+			//半径
+			int range = 6;
+			AxisAlignedBB searchArea = new AxisAlignedBB(new BlockPos(this.cat.posX, this.cat.posY, this.cat.posZ));
+			searchArea = searchArea.expand(range, 3, range).expand(-range, -1, -range);
+			
+			//範囲の指定方法を変更
+			//this.cat.getEntityBoundingBox().expand(8.0D, 3.0D, 8.0D)
+			this.closestItem = (EntityItem)this.cat
+					.getEntityWorld()
+					.findNearestEntityWithinAABB(
+							EntityItem.class, 
+							searchArea, 
+							this.cat);
 
 			boolean res = false;
 			if (this.closestItem != null)  {

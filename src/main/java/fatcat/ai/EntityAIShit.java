@@ -21,7 +21,7 @@ public class EntityAIShit extends EntityAIBase {
 	public EntityAIShit(EntityFatCat cat) {
 		this.cat = cat;
 		this.world = cat.getEntityWorld();
-        this.setMutexBits(18);
+        this.setMutexBits(13);
 	}
 
 	@Override

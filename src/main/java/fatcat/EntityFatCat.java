@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISit;
@@ -216,8 +217,12 @@ public class EntityFatCat extends EntityTameable {
 	@Override
 	public EntityFatCat createChild(EntityAgeable p_90011_1_) {
 		EntityFatCat cat = new EntityFatCat(this.getEntityWorld());
-		// setOwnerId
-		cat.setOwnerId(this.getOwner().getUniqueID());
+		
+		EntityLivingBase owner =this.getOwner();
+		if (owner != null) {
+			// setOwnerId
+			cat.setOwnerId(owner.getUniqueID());
+		}
 		return cat;
 	}
 
@@ -427,6 +432,7 @@ public class EntityFatCat extends EntityTameable {
 
     public void setAISit(boolean sit) {
     	this.aiSit.setSitting(sit);
+    	this.setSitting(sit);
     }
     
 	public void eatEntityBounus(EntityItem food) {

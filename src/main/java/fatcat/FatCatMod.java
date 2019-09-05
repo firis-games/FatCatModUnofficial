@@ -14,6 +14,8 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.Logger;
+
 import fatcat.gui.GuiStatusHandler;
 import fatcat.model.RenderFatCat;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -51,6 +53,8 @@ public class FatCatMod {
     public static final String VERSION = "1.0.3";
 	public static final int STATUS_GUI_ID = 0;
 
+	public static Logger logger;
+	
     /* デバッグモード */
 	public static boolean DEBUG = true;
 	
@@ -74,20 +78,7 @@ public class FatCatMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-    	/*
-    	egg = new ItemFatCatEgg().setUnlocalizedName("fatcat_egg");
-    	unko = new ItemFatCatUnko().setUnlocalizedName("fatcat_unko");
-    	brush = new ItemCatBrush().setUnlocalizedName("fatcat_brush");
-    	furball = new ItemFurball().setUnlocalizedName("furball");
-    	feather_toy = new ItemFeatherToy().setUnlocalizedName("fatcat_feather_toy");
-    	
-    	//古い書き方だけど動くのでそのまま
-    	GameRegistry.registerItem(egg, egg.getUnlocalizedName().substring(5));
-    	GameRegistry.registerItem(unko, unko.getUnlocalizedName().substring(5));
-    	GameRegistry.registerItem(brush, brush.getUnlocalizedName().substring(5));
-    	GameRegistry.registerItem(furball, furball.getUnlocalizedName().substring(5));
-    	GameRegistry.registerItem(feather_toy, feather_toy.getUnlocalizedName().substring(5));
-    	*/
+		logger = event.getModLog();
     	
     	//Entity登録
     	EntityRegistry.registerModEntity(new ResourceLocation(FatCatMod.MODID, "fatcat"),
@@ -97,35 +88,8 @@ public class FatCatMod {
     	EntityRegistry.registerModEntity(new ResourceLocation(FatCatMod.MODID, "fatcat_unko"),
     			EntityFatCat.class,
     			"fatcat_unko", ++modEntityIndex, this, 64, 10, true);
-    	
-    	/*
-    	//レシピ追加
-    	GameRegistry.addRecipe(
-    			new ItemStack(brush, 1),
-    			"BT ", "BT ", " T ",
-    			'B', Blocks.HAY_BLOCK, 'T', Items.STICK);
-    	GameRegistry.addRecipe(
-    			new ItemStack(feather_toy, 1),
-    			" F ", " F ", " T ",
-    			'F', furball, 'T', Items.STICK);
-    	*/
-    	
-    	//チェストへアイテムを追加
-    	/*
-    	// Get a fatcat egg via fishing.
-    	FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(egg), 1));
-    	ChestGenHooks.addItem(ChestGenHooks.PYRAMID_DESERT_CHEST, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 15));
-    	ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 15));
-    	ChestGenHooks.addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(egg, 1, 0), 1, 1, 7));
-    	*/
-    	/*
-    	//チェスト方式からクラフト方式へ変更
-    	GameRegistry.addRecipe(
-    			new ItemStack(egg, 1),
-    			" F ", "BEB", " F ",
-    			'E', Items.EGG, 'F', Items.FISH, 'B', Items.EMERALD);
-		*/
-    	
+
+    	//Config
     	Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 
     	config.load();

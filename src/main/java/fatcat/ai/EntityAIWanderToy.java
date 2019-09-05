@@ -18,7 +18,7 @@ public class EntityAIWanderToy extends EntityAIBase {
 	public EntityAIWanderToy(EntityFatCat cat, double distance) {
 		this.cat = cat;
 		this.minPlayerDistance = distance;
-		this.setMutexBits(19);
+		this.setMutexBits(14);
 		moving = false;
 	}
 

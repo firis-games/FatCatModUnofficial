@@ -19,7 +19,7 @@ public class EntityAIFatCatBeg extends EntityAIBase {
 		this.cat = cat;
         this.worldObject = cat.getEntityWorld();
         this.minPlayerDistance = distance;
-        this.setMutexBits(13);
+        this.setMutexBits(0);
 	}
 
     /**

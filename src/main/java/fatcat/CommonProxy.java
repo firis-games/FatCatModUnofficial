@@ -13,7 +13,7 @@ public class CommonProxy {
 	public void log(World world, String fmt, Object ... data) {
 		if (FatCatMod.logging) {
 			fmt = "[FatCatMOD]worldTime=" + world.getWorldTime() + ", " + fmt;
-			//FMLLog.info(fmt, data);
+			FatCatMod.logger.info(fmt, data);
 		}
 	}
 }
