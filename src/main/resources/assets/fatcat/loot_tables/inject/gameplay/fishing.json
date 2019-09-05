@@ -1,0 +1,17 @@
+{
+	"__comment": "minecraft:gameplay/fishing add custom pools",
+	"pools": [
+		{
+			"name": "main",
+			"rolls": 1,
+			"entries": [
+				{
+				"type": "item",
+				"name": "fatcat:fatcat_egg",
+                "weight": 5,
+                "quality": 2
+				}
+			]
+		}
+	]
+}
